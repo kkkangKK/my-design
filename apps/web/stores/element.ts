@@ -204,6 +204,8 @@ export const UseElementStore = create<ElementStore>((set, get) => ({
     backgroundSize: "100% 100%",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
+    height: "100vh",
+    width: "100vw",
   },
   setPageBackgroundStyle: (style: {}) => set((state) => ({ pageBackgroundStyle: style })),
   //复制元素

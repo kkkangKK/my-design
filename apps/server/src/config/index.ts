@@ -50,7 +50,7 @@ export const GlobalConfig = {
   },
   /** OSS配置 */
   oss: {
-    region: process.env.OSS_REGION || 'oss-cn-shenzhen',
+    region: process.env.OSS_REGION || 'oss-cn-beijing',
     accessKeyId: process.env.OSS_ACCESS_KEY_ID || 'default_access_key_id',
     accessKeySecret:
       process.env.OSS_ACCESS_KEY_SECRET || 'default_access_key_secret',

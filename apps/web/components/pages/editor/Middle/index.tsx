@@ -79,6 +79,8 @@ function Middle(props: any) {
         backgroundSize: "100% 100%",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
+        height: "100vh",
+        width: "100vw",
       });
     }
   };
@@ -137,7 +139,8 @@ function Middle(props: any) {
 
       <div
         id="mid-container"
-        className={`bg-white mt-5 ${ratio > 1 ? "scale-[0.8]" : ""}`}
+        // className={`bg-white mt-5 ${ratio > 1 ? "scale-[0.8]" : ""}`}
+        className={`bg-white mt-5`}
         style={{
           ...pageBackgroundStyle,
           width: "375px",

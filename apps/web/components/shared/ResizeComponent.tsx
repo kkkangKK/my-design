@@ -37,13 +37,19 @@ function ResizeComponent({
   const calculateSize = (direction: directionType, e: MouseEvent, position: any) => {
     const { clientX, clientY } = e;
     const { right, bottom, left, top } = position;
+    //画布元素
     const container = document.getElementById("mid-container") as HTMLDivElement;
+    const editor_header = document.getElementById("editor-header") as HTMLDivElement;
+    const editor_left = document.getElementById("editor-left") as HTMLDivElement;
+    console.log(editor_header.offsetHeight, editor_left.offsetWidth);
+    // console.log('///////',container.offsetTop,clientY)
+    // console.log('///////',container.offsetLeft,clientX)
     const rightWidth = clientX - left;
     const leftWidth = right - clientX;
     const bottomHeight = clientY - top;
     const topHeight = bottom - clientY;
-    const topOffset = clientY - container.offsetTop;
-    const leftOffset = clientX - container.offsetLeft;
+    const topOffset = clientY - container.offsetTop - editor_header.offsetHeight;
+    const leftOffset = clientX - container.offsetLeft - editor_left.offsetWidth;
     switch (direction) {
       case "top-left":
         return {

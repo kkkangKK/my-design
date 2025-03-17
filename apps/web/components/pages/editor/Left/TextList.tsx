@@ -59,7 +59,7 @@ function TextList() {
     <div className="grid grid-cols-2 mt-4">
       {textTemplate.map((item: any) => (
         <button
-          key={item.id}
+          key={item.text}
           onClick={(e) => handleClick(e)}
           style={item.style}
           className="mx-auto my-2"

@@ -40,13 +40,17 @@ function ImgList() {
 
     styles.forEach((style) => {
       if (style.trim()) {
-        // 忽略空字符串或仅包含空格的字符串
-        const [key, value] = style.trim().split(":");
-        //转成驼峰css
-        const camelCaseKey = kebabCaseToCamelCase(key.trim());
-        // 可能需要额外的处理来去除值两端的空格或引号等
-        if (camelCaseKey) {
-          styleObject[camelCaseKey] = value.trim().replace(/"/g, "").replace(/'/g, "");
+        // 使用正则表达式分割键值对
+        const match = style.trim().match(/^([^:]+):(.+)$/);
+        if (match) {
+          const key = match[1].trim(); // 获取键
+          const value = match[2].trim(); // 获取值
+          const camelCaseKey = kebabCaseToCamelCase(key); // 转换为驼峰命名
+
+          // 可能需要额外的处理来去除值两端的空格或引号等
+          if (camelCaseKey) {
+            styleObject[camelCaseKey] = value.trim().replace(/"/g, "").replace(/'/g, "");
+          }
         }
       }
     });
@@ -58,7 +62,7 @@ function ImgList() {
     <div className="grid grid-cols-2 mt-4">
       {imgTemplate.map((item: any) => (
         <button
-          key={item.id}
+          key={item.style.backgroundImage}
           onClick={(e) => handleClick(e)}
           style={item.style}
           className="mx-auto my-2"

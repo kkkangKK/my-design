@@ -39,7 +39,6 @@ export class UserService {
     if (!old) throw '用户ID不存在';
     if (dto.username) {
       const tempUser = await this.findUserByUsername(dto.username);
-      console.log(tempUser, tempUser.userId, dto.userId);
       if (!!tempUser && tempUser.id !== dto.userId) throw '用户名已存在';
     }
     await this.db.update(user).set(dto).where(eq(user.id, dto.userId));

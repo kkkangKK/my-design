@@ -15,7 +15,7 @@ const Footer: React.FC<FooterProps> = () => {
         >
           {FooterNavLinks().map((link) => (
             <FooterNavLink
-              key={link.href}
+              key={link.label}
               href={link.href}
               label={link.label}
             />
@@ -24,7 +24,7 @@ const Footer: React.FC<FooterProps> = () => {
         <div className="mt-10 flex justify-center space-x-10">
           {FooterSocialLinks.map((link) => (
             <SocialLink
-              key={link.href}
+              key={link.srOnlyText}
               href={link.href}
               srOnlyText={link.srOnlyText}
               icon={link.icon}

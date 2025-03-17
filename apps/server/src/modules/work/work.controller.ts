@@ -83,6 +83,7 @@ export class WorkController {
   }
 
   @Get('list')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: '获取工作区列表',
     description: '获取工作区列表',

@@ -41,7 +41,7 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({ children }) => {
 
     // 监听滚动事件
     lenis.on("scroll", ({ scroll, velocity, direction }) => {
-      console.log(`Scroll: ${scroll}, Velocity: ${velocity}, Direction: ${direction}`);
+      // console.log(`Scroll: ${scroll}, Velocity: ${velocity}, Direction: ${direction}`);
       // 你可以在这里添加自定义的滚动处理逻辑
     });
 

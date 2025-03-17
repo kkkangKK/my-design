@@ -18,7 +18,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "http",
-        hostname: "poster-craft.oss-cn-shenzhen.aliyuncs.com",
+        hostname: "poster-craft-kkkang.oss-cn-beijing.aliyuncs.com",
       },
       {
         protocol: "https",

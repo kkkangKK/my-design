@@ -58,7 +58,7 @@ function GraphList() {
     <div className="grid grid-cols-2 mt-4">
       {graphTemplate.map((item: any) => (
         <button
-          key={item.id}
+          key={item.style.clipPath}
           onClick={(e) => handleClick(e)}
           style={item.style}
           className="mx-auto my-4"

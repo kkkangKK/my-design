@@ -10,7 +10,8 @@ type StyleType =
   | "sizeProps";
 
 const useProps = (initialState: any, styleType: StyleType) => {
-  const { updateElement, currentElement, getElement } = UseElementStore();
+  const { updateElement, currentElement, getElement, currentPosition, currentSize } =
+    UseElementStore();
   const [elementStyle, setElementStyle] = useState(initialState);
 
   const reset = useCallback(() => {
@@ -46,7 +47,7 @@ const useProps = (initialState: any, styleType: StyleType) => {
       return updatedStyles;
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentElement, getElement]);
+  }, [currentElement, getElement, currentPosition, currentSize]);
 
   const handleUpdate = useCallback(
     (updateKey: string, updateValue: any) => {
