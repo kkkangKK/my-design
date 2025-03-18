@@ -8,10 +8,25 @@ type ChannelProps = {
   name: string;
 };
 
-type Content = {
-  components?: Array<any>;
+type Element = {
+  id?: string;
+  type?: string;
+  text?: string;
   props?: any;
+  isHidden?: boolean;
+  isLocked?: boolean;
+  layerName?: string;
 };
+
+type Content = {
+  Elements?: Array<Element>;
+  pageBackgroundStyle?: any;
+};
+
+// type Content = {
+//   components?: Array<any>;
+//   props?: any;
+// };
 
 export const work = mysqlTable("work", {
   id: int("id").primaryKey().autoincrement(),

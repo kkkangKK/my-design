@@ -28,7 +28,7 @@ function DialogDemo({
   children: React.ReactNode;
 }>) {
   const { Elements, pageBackgroundStyle } = UseElementStore();
-  const { currentWorkId } = useWorkStore();
+  const { currentWorkId, setWork } = useWorkStore();
 
   const FormSchema = z.object({
     title: z
@@ -68,10 +68,17 @@ function DialogDemo({
       status: 1,
     };
     console.log(params);
+    console.log("71----", currentWorkId);
     try {
-      const res = currentWorkId
-        ? await updateWork(currentWorkId, params)
-        : await createWork(params);
+      let res;
+      if (currentWorkId) {
+        res = await updateWork(currentWorkId, params);
+      } else {
+        res = await createWork(params);
+        if (res.data.code === 200) {
+          setWork(res.data.data.workId);
+        }
+      }
       if (res.data.code === 200) {
         toast({
           variant: "success",

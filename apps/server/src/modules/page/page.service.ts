@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, DbType } from '../global/providers/db.provider';
-import { work } from '@poster-craft/schema';
+// import { work } from '@poster-craft/schema';
+import { work } from '../../../../../packages/schema/src/schema/work';
 import { eq } from 'drizzle-orm';
 
 @Injectable()
@@ -47,15 +48,28 @@ export class PageService {
   }
 
   async renderToPageData(query: { id: string; uuid: string }) {
+    console.log(22222);
     const currentWork = await this.db.query.work.findFirst({
       where: eq(work.uuid, query.uuid),
     });
     if (!currentWork) throw '工作区不存在';
-    if (!currentWork.isPublic) throw '工作区未发布';
+
     const { title, desc, content } = currentWork;
-    const html = '';
+    this.px2vw(content && content.Elements);
+
+    const html = content?.Elements.map((element) => {
+      const style = this.propsToStyle(element.props);
+
+      return `<div 
+        id="${element.id}" 
+        style="position: absolute; ${style}"
+        >${element.text ? element.text : ''}</div>`;
+    }).join('');
+
+    const bodyStyle = this.propsToStyle(content && content.pageBackgroundStyle);
     const result = {
       html,
+      bodyStyle,
       title,
       desc,
     };

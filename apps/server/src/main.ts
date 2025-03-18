@@ -40,7 +40,8 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/swagger', app, document, GlobalConfig.swaggerConfig);
-  await app.listen(GlobalConfig.port);
+  // await app.listen(GlobalConfig.port); // 监听端口默认是127.0.0.1，不能对外暴露
+  await app.listen(GlobalConfig.port, '0.0.0.0');
 }
 
 bootstrap().then(() => Logger.log(GlobalConfig.StartLog));

@@ -120,8 +120,6 @@ const UploadBackground: React.FC<ChildProps> = ({ handleOssUrl, img, className }
           backgroundSize: "contain",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
-          height: "100vh",
-          width: "100vw",
         }}
       >
         <input
