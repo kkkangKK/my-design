@@ -14,16 +14,6 @@ import { string } from 'zod';
 export class PageController {
   constructor(private readonly pageService: PageService) {}
 
-  splitIdAndUuid(str = '') {
-    const result = { id: '', uuid: '' };
-    if (!str) return result;
-    const firstDashIndex = str.indexOf('-');
-    if (firstDashIndex < 0) return result;
-    result.id = str.slice(0, firstDashIndex);
-    result.uuid = str.slice(firstDashIndex + 1);
-    return result;
-  }
-
   @Get(':pageId')
   @ApiParam({
     name: 'pageId',
@@ -38,8 +28,7 @@ export class PageController {
   @Render('index')
   async renderH5Page(@Param('pageId') pageId: string, @Res() res) {
     try {
-      const query = this.splitIdAndUuid(pageId);
-      const data = await this.pageService.renderToPageData(query);
+      const data = await this.pageService.renderToPageData(pageId);
       res.view('index.art', data);
       return {
         code: 200,
@@ -66,8 +55,7 @@ export class PageController {
   @Render('index')
   async renderH5PagePreview(@Param('pageId') pageId: string, @Res() res) {
     try {
-      const query = this.splitIdAndUuid(pageId);
-      const data = await this.pageService.renderToPageData(query);
+      const data = await this.pageService.renderToPageData(pageId);
       res.view('index.art', data);
       return {
         code: 200,

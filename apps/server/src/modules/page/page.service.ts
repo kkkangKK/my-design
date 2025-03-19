@@ -47,10 +47,9 @@ export class PageService {
     return styleArr.join(';');
   }
 
-  async renderToPageData(query: { id: string; uuid: string }) {
-    console.log(22222);
+  async renderToPageData(id: string) {
     const currentWork = await this.db.query.work.findFirst({
-      where: eq(work.uuid, query.uuid),
+      where: eq(work.uuid, id),
     });
     if (!currentWork) throw '工作区不存在';
 

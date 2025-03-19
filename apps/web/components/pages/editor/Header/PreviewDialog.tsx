@@ -1,73 +1,69 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { useToast } from "@/components/ui/use-toast";
-import { publishWorkToTemplate } from "@/http/work";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useWorkStore } from "@/stores/work";
+import { takeScreenshot } from "@/utils/others/takeScreenshot";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
 function DialogDemo({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { toast } = useToast();
   const { currentWorkId } = useWorkStore();
-  const handleClick = async () => {
-    try {
-      if (currentWorkId) {
-        const res = await publishWorkToTemplate(currentWorkId);
-        if (res.data.code === 200) {
-          toast({
-            variant: "success",
-            title: "Success",
-            description: "作品发布成功",
-          });
-        }
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "请先保存作品再发布",
-        });
-      }
-    } catch (error) {
-      console.log(error);
+
+  // 拼接完整 URL（后期改为域名）
+  // const fullUrl = `https://192.168.31.176:3001/page/${currentWorkId || ""}`;
+  const fullUrl = `http://127.0.0.1:3001/page/${currentWorkId || ""}`;
+
+  const [imgUrl, setImgUrl] = useState("");
+  const getTheImg = async () => {
+    const img = await takeScreenshot();
+    if (img) {
+      setImgUrl(img);
     }
   };
 
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    getTheImg();
+  }, [open]);
+
   return (
-    <Dialog>
+    <Dialog
+      open={open}
+      onOpenChange={setOpen}
+    >
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>tip</DialogTitle>
-        </DialogHeader>
-
-        <div className="w-[80%] mx-auto">
-          <DialogTitle> 确认要发布作品吗？</DialogTitle>
+        <div
+          className="mockup-phone"
+          style={{ width: 375, height: 667 }}
+        >
+          <div className="mockup-phone-display">
+            <Image
+              className="w-full h-full object-cover rounded-[36px]"
+              src={imgUrl}
+              alt="封面"
+              width={0}
+              height={0}
+              sizes="100vh"
+            />
+          </div>
         </div>
 
-        <DialogFooter className="sm:justify-end">
-          <DialogClose asChild>
-            <Button
-              type="button"
-              onClick={handleClick}
-              className="bg-[#3d7fff] text-white"
-              variant="secondary"
-            >
-              确认
-            </Button>
-          </DialogClose>
-        </DialogFooter>
+        <div className="space-y-2">
+          <label className="text-sm font-medium">海报链接</label>
+          <input
+            type="text"
+            value={fullUrl}
+            placeholder="生成作品后显示链接"
+            className="input w-full"
+            disabled
+          />
+        </div>
       </DialogContent>
     </Dialog>
   );
