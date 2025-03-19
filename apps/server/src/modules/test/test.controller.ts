@@ -12,7 +12,8 @@ import {
 import { DB, DbType } from 'src/modules/global/providers/db.provider';
 import * as argon2 from 'argon2';
 // import { user } from '@poster-craft/schema';
-import { user } from '../../../../../packages/schema';
+import { user } from '@kkkang/schema';
+// import { user } from '../../../../../packages/schema';
 import {
   ApiBody,
   ApiOperation,

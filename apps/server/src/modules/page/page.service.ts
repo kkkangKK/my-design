@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, DbType } from '../global/providers/db.provider';
 // import { work } from '@poster-craft/schema';
-import { work } from '../../../../../packages/schema/src/schema/work';
+import { work } from '@kkkang/schema';
+// import { work } from '../../../../../packages/schema/src/schema/work';
 import { eq } from 'drizzle-orm';
 
 @Injectable()

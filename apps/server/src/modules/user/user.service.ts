@@ -1,5 +1,6 @@
 // import { user } from '@poster-craft/schema';
-import { user } from '../../../../../packages/schema';
+import { user } from '@kkkang/schema';
+// import { user } from '../../../../../packages/schema';
 import { Inject, Injectable } from '@nestjs/common';
 import * as argon2 from 'argon2';
 import { eq } from 'drizzle-orm';
@@ -27,8 +28,9 @@ export class UserService {
           password: await argon2.hash(dto.password),
         }
       : dto;
-    const [res] = await this.db.insert(user).values(newUsers);
-    return res;
+    const [res] = await this.db.insert(user).values(newUsers).$returningId();
+
+    return res.id;
   }
 
   async deleteUser(userId: string) {

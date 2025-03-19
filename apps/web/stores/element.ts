@@ -327,6 +327,9 @@ export const UseElementStore = create<ElementStore>((set, get) => ({
       get().historyIndex--;
     }
     const history = get().histories[get().historyIndex];
+    if (!history || !history.type) {
+      return;
+    }
     switch (history.type) {
       case "add":
         get().Elements = get().Elements.filter((element) => element.id !== history.elementId);
@@ -349,6 +352,9 @@ export const UseElementStore = create<ElementStore>((set, get) => ({
   //恢复操作
   redo: () => {
     const history = get().histories[get().historyIndex];
+    if (!history || !history.type) {
+      return;
+    }
     switch (history.type) {
       case "add":
         get().Elements.push(history.data);
