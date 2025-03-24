@@ -13,43 +13,45 @@ interface BaseLayoutProps {
 }
 
 const BaseLayout: React.FC<BaseLayoutProps> = ({ children }) => {
-  useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2, // 滑动持续时间
-      easing: (t) => 1 - Math.pow(1 - t, 2), // 自定义缓动函数
-      touchMultiplier: 2,
-      infinite: false,
-      smoothWheel: true,
-      wheelMultiplier: 1.5,
-      lerp: 0.05, // 平滑度
-      orientation: "vertical", // 滚动方向
-      gestureOrientation: "vertical", // 手势方向
-      syncTouch: true, // 模拟触摸设备滚动
-      syncTouchLerp: 0.1, // 同步触摸平滑度
-      touchInertiaMultiplier: 5, // 触摸惯性倍率
-      prevent: (node) => node.classList.contains("cookie-modal"), // 自定义阻止滚动平滑的逻辑
-    });
+  //此滑动阻尼与ai聊天框滚动有冲突，暂时先注释掉
 
-    let rafId: number;
+  // useEffect(() => {
+  //   const lenis = new Lenis({
+  //     duration: 1.2, // 滑动持续时间
+  //     easing: (t) => 1 - Math.pow(1 - t, 2), // 自定义缓动函数
+  //     touchMultiplier: 2,
+  //     infinite: false,
+  //     smoothWheel: true,
+  //     wheelMultiplier: 1.5,
+  //     lerp: 0.05, // 平滑度
+  //     orientation: "vertical", // 滚动方向
+  //     gestureOrientation: "vertical", // 手势方向
+  //     syncTouch: true, // 模拟触摸设备滚动
+  //     syncTouchLerp: 0.1, // 同步触摸平滑度
+  //     touchInertiaMultiplier: 5, // 触摸惯性倍率
+  //     prevent: (node) => node.classList.contains("cookie-modal"), // 自定义阻止滚动平滑的逻辑
+  //   });
 
-    function raf(time: number) {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
+  //   let rafId: number;
 
-    rafId = requestAnimationFrame(raf);
+  //   function raf(time: number) {
+  //     lenis.raf(time);
+  //     rafId = requestAnimationFrame(raf);
+  //   }
 
-    // 监听滚动事件
-    lenis.on("scroll", ({ scroll, velocity, direction }) => {
-      // console.log(`Scroll: ${scroll}, Velocity: ${velocity}, Direction: ${direction}`);
-      // 你可以在这里添加自定义的滚动处理逻辑
-    });
+  //   rafId = requestAnimationFrame(raf);
 
-    return () => {
-      cancelAnimationFrame(rafId); // 取消动画帧请求
-      lenis.destroy(); // 清理Lenis实例
-    };
-  }, []);
+  //   // 监听滚动事件
+  //   lenis.on("scroll", ({ scroll, velocity, direction }) => {
+  //     // console.log(`Scroll: ${scroll}, Velocity: ${velocity}, Direction: ${direction}`);
+  //     // 你可以在这里添加自定义的滚动处理逻辑
+  //   });
+
+  //   return () => {
+  //     cancelAnimationFrame(rafId); // 取消动画帧请求
+  //     lenis.destroy(); // 清理Lenis实例
+  //   };
+  // }, []);
 
   return (
     <div className="relative min-h-svh p-1.5 btn--animateGlowPink duration-300 ease-out">
