@@ -39,6 +39,6 @@ export class RegisterDto extends OmitType(CreateUserDto, [
   })
   @IsNotEmpty({ message: '验证码不能为空' })
   @IsString({ message: '验证码必须是字符串类型' })
-  @Length(6, 6, { message: '验证码应为6位数字' })
+  // @Length(6, 6, { message: '验证码应为6位数字' })
   otp: string;
 }

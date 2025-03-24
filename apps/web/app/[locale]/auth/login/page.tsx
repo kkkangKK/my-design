@@ -42,9 +42,9 @@ export default function Login() {
     }),
     code: z
       .string()
-      .length(6, {
-        message: t("form.code.length"),
-      })
+      // .length(6, {
+      //   message: t("form.code.length"),
+      // })
       .regex(/^\d+$/, {
         message: t("form.code.length"),
       }),
