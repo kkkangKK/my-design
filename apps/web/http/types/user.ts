@@ -20,6 +20,9 @@ export type AddPasswordBody = {
 };
 
 export type UpdatePasswordBody = {
-  oldPassword: string;
   newPassword: string;
+};
+
+export type IsHasPasswordResponse = {
+  hasPassword: boolean;
 };

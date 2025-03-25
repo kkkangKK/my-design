@@ -24,7 +24,7 @@ export class MailController {
     description: '发送邮箱验证码并返回',
   })
   @APIResponse()
-  async sendCodeByEmail(@Query() dto: SendCodeByEmailDto) {
+  async sendCodeByEmail(@Body() dto: SendCodeByEmailDto) {
     try {
       await this.mailService.sendCodeByMail(dto);
       return {
@@ -100,6 +100,7 @@ export class MailController {
   @APIResponse()
   async verifyEmail(@Body() dto: VerifyEmailDto) {
     try {
+      console.log(11111111111111);
       await this.mailService.verifyEmail(dto);
       return {
         code: 200,

@@ -22,7 +22,7 @@ import { GlobalConfig } from 'src/config';
         },
       },
       defaults: {
-        from: '"PosterCraft" liuxinghao030@163.com',
+        from: '"PosterCraft" kkkang1216@163.com',
       },
       template: {
         dir: __dirname + '/template/',

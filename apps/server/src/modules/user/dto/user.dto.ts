@@ -97,14 +97,6 @@ export class UpdateUserDto extends OmitType(CreateUserDto, [
 
 export class ChangePasswordDto {
   @ApiProperty({
-    example: '123456',
-    description: '旧密码不能为空,长度应在6-20位之间',
-  })
-  @IsNotEmpty({ message: '旧密码不能为空' })
-  @Length(6, 20, { message: '密码长度为6-20位' })
-  oldPassword: string;
-
-  @ApiProperty({
     example: '654321',
     description: '新密码不能为空,长度应在6-20位之间',
   })

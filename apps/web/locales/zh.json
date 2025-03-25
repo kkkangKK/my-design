@@ -1,27 +1,8 @@
 {
-  "loginSuccess": "登录成功，即将跳转至主页...",
-  "sendCode": "发送验证码",
-  "otherLoginWays": "其他登录方式",
-  "register": "注册",
-  "login": "登录",
-  "signUp": "注册",
-  "usernamePlaceholder": "请输入用户名",
-  "usernameOrEmail": "用户名/邮箱",
-  "usernameOrEmailPlaceholder": "请输入用户名/邮箱",
-  "loginByPhone": "使用手机号登录",
-  "loginByUsernameOrEmail": "使用用户名/邮箱登录",
-  "passwordPlaceholder": "请输入密码",
-  "phonePlaceholder": "请输入手机号码",
-  "otpPlaceholder": "请输入验证码",
-  "username": "用户名",
-  "password": "密码",
-  "phone": "手机号码",
-  "otp": "验证码",
-  "registerLink": "立即注册",
-  "loginLink": "已有账号？立即登录",
   "account-setting": "账号设置",
   "bind-account": "绑定账号",
   "change-email": "更换邮箱",
+  "change-password": "修改密码",
   "change-phone": "更换手机号",
   "close-account": "注销账号",
   "close-account-desc": "注销后账号所有数据将被销毁并不可找回，请谨慎操作。",
@@ -29,7 +10,54 @@
   "develop-document": "开发文档",
   "discover-more": "查看更多",
   "editPersonalInformation": "编辑个人信息",
+  "email": "电子邮箱",
+  "emailPlaceholder": "输入电子邮箱",
+  "errors": {
+    "common": {
+      "networkError": "网络错误，请检查网络连接",
+      "serverError": "服务器错误，请稍后重试",
+      "tryAgain": "出错了，请重试"
+    },
+    "connection": {
+      "closed": "连接已关闭，请检查网络后重试",
+      "failed": "连接失败，请检查网络设置",
+      "timeout": "连接超时，请稍后重试"
+    },
+    "database": {
+      "connectionClosed": "数据库连接已断开，请刷新页面重试"
+    }
+  },
   "exploreTemplates": "探索模版",
+  "form": {
+    "code": {
+      "length": "验证码必须为数字",
+      "required": "请输入验证码"
+    },
+    "confirmPassword": {
+      "notMatch": "两次输入的密码不一致",
+      "required": "请确认密码"
+    },
+    "email": {
+      "invalid": "请输入有效的邮箱地址",
+      "required": "请输入邮箱地址"
+    },
+    "password": {
+      "maxLength": "密码长度不能超过20位",
+      "minLength": "密码长度至少为6位",
+      "pattern": "密码必须包含字母和数字",
+      "required": "请输入密码"
+    },
+    "phone": {
+      "invalid": "请输入有效的手机号码",
+      "required": "请输入手机号码"
+    },
+    "required": "此项为必填项",
+    "username": {
+      "maxLength": "用户名长度不能超过20位",
+      "minLength": "用户名长度至少为2位",
+      "required": "请输入用户名"
+    }
+  },
   "high-compatibility": "兼容性强",
   "high-compatibility-desc": "支持日夜间模式切换，国际化语言切换！",
   "home": "首页",
@@ -37,70 +65,46 @@
   "intuitive-page-desc": "数百种精心设计的模板，满足各种场景需求！",
   "language-switching": "切换语言",
   "log-out": "登出",
+  "login": "登录",
+  "loginByPhone": "使用手机号登录",
+  "loginByUsernameOrEmail": "使用用户名/邮箱登录",
+  "loginLink": "已有账号？立即登录",
+  "loginSuccess": "登录成功，即将跳转至主页...",
   "my-card": "我的信息",
   "new-features-added": "新增功能",
+  "new-password": "新密码",
   "next-step": "下一步",
   "one-click-sharing": "一键分享",
   "one-click-sharing-desc": "轻松将您的作品分享到社交媒体或导出高质量图片！",
+  "otherLoginWays": "其他登录方式",
+  "otp": "验证码",
+  "otpPlaceholder": "请输入验证码",
+  "password": "密码",
   "password-setting": "密码设置",
+  "passwordPlaceholder": "请输入密码",
   "personal-center": "个人中心",
+  "phone": "手机号码",
+  "phonePlaceholder": "请输入手机号码",
   "profile": "个人资料",
   "project-address": "项目地址",
+  "register": "注册",
+  "registerLink": "立即注册",
   "return": "返回",
   "rich-templates": "丰富的模板",
   "rich-templates-desc": "数百种精心设计的模板，满足各种场景需求！",
+  "sendCode": "发送验证码",
   "settings": "设置",
   "share": "分享",
+  "signUp": "注册",
   "start-designing": "开始设计",
   "template-list": "模板库",
   "templates": "模板库",
   "topic-switching": "主题切换",
+  "username": "用户名",
+  "usernameOrEmail": "用户名/邮箱",
+  "usernameOrEmailPlaceholder": "请输入用户名/邮箱",
+  "usernamePlaceholder": "请输入用户名",
   "verification-code": "验证码",
   "works": "作品集",
-  "works-list": "我的作品集",
-  "form": {
-    "required": "此项为必填项",
-    "email": {
-      "invalid": "请输入有效的邮箱地址",
-      "required": "请输入邮箱地址"
-    },
-    "password": {
-      "required": "请输入密码",
-      "minLength": "密码长度至少为6位",
-      "maxLength": "密码长度不能超过20位",
-      "pattern": "密码必须包含字母和数字"
-    },
-    "username": {
-      "required": "请输入用户名",
-      "minLength": "用户名长度至少为2位",
-      "maxLength": "用户名长度不能超过20位"
-    },
-    "phone": {
-      "required": "请输入手机号码",
-      "invalid": "请输入有效的手机号码"
-    },
-    "code": {
-      "required": "请输入验证码",
-      "length": "验证码必须为6位数字"
-    },
-    "confirmPassword": {
-      "required": "请确认密码",
-      "notMatch": "两次输入的密码不一致"
-    }
-  },
-  "errors": {
-    "connection": {
-      "closed": "连接已关闭，请检查网络后重试",
-      "timeout": "连接超时，请稍后重试",
-      "failed": "连接失败，请检查网络设置"
-    },
-    "database": {
-      "connectionClosed": "数据库连接已断开，请刷新页面重试"
-    },
-    "common": {
-      "tryAgain": "出错了，请重试",
-      "networkError": "网络错误，请检查网络连接",
-      "serverError": "服务器错误，请稍后重试"
-    }
-  }
+  "works-list": "我的作品集"
 }

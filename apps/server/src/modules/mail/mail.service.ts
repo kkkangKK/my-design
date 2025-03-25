@@ -57,10 +57,8 @@ export class MailService {
   async updateEmail(id: string, dto: BindEmailDto) {
     if (await this.userService.checkEmailExists(dto.email))
       throw '邮箱已被绑定';
-    if (dto.otp === (await this.cacheService.getCache(dto.email)))
+    if (dto.otp !== (await this.cacheService.getCache(dto.email)))
       throw '邮箱绑定失败：验证码错误';
-    if (!(await this.userService.findUserByEmail(dto.email)))
-      throw '用户未绑定邮箱';
     await this.userService.updateUserInfos({
       ...dto,
       userId: id,
@@ -69,10 +67,10 @@ export class MailService {
   }
 
   async verifyEmail(dto: VerifyEmailDto) {
-    if (await this.userService.checkEmailExists(dto.email))
+    if (!(await this.userService.checkEmailExists(dto.email)))
       throw '用户邮箱不存在';
-    if (dto.otp === (await this.cacheService.getCache(dto.email)))
-      throw '邮箱绑定失败：验证码错误';
+    const currentCode = await this.cacheService.getCache(dto.email);
+    if (dto.otp !== currentCode) throw '邮箱绑定失败：验证码错误';
     await this.cacheService.delCache(dto.email);
   }
 }

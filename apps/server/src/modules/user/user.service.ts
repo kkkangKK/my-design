@@ -63,9 +63,7 @@ export class UserService {
 
   async changePassword(userId: string, dto: ChangePasswordDto) {
     const currentUser = await this.findUserByUserId(userId);
-    if (!user) throw '用户ID不存在';
-    if (argon2.verify(currentUser.password, dto.oldPassword))
-      throw '旧密码错误';
+    if (!currentUser) throw '用户ID不存在';
     const hash = await argon2.hash(dto.newPassword);
     await this.db
       .update(user)

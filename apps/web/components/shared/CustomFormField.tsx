@@ -60,7 +60,7 @@ function CustomFormField({
         description: "请在1分钟内完成验证",
       });
       setIsDisabled(true);
-      setCountdown(60);
+      setCountdown(30);
     }
   };
   useEffect(() => {

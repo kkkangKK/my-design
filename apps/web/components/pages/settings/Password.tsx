@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
-import { bindEmail, updateEmail, verifyEmail } from "@/http/email";
-import { getUserInfo } from "@/http/user";
+import { verifyPhone } from "@/http/sms";
+import { addPassword, getUserInfo, isHasPassword, updatePassword } from "@/http/user";
 import { useUserStore } from "@/stores/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -18,74 +18,73 @@ export default function Account({ className }: Readonly<{ className?: string }>)
   const t = useTranslations();
   const { toast } = useToast();
   const { userId } = useUserStore();
-  const [isBindEmail, setIsBindEmail] = useState<boolean>(false);
-  const [emailStep, setEmailStep] = useState<number>(0); //用于控制表单显示的步骤变化
-  const [emailDisabled, setEmailIsDisabled] = useState<boolean>(true);
-  const [countdownZero, setCountdownZero] = useState<boolean>(false); //用于控制验证码倒计时
-  const emailFormSchema = z.object({
-    email: z.string().email({
-      message: t("form.email.invalid"),
+
+  const [phoneStep, setPhoneStep] = useState<number>(0); //用于控制表单显示的步骤变化
+
+  const FormSchema = z.object({
+    phone: z.string().regex(/^1[3-9]\d{9}$/, {
+      message: t("form.phone.invalid"),
     }),
-    otp: z
-      .string()
-      .length(6, {
-        message: t("form.code.length"),
-      })
-      .regex(/^\d+$/, {
-        message: t("form.code.length"),
-      }),
+    otp: z.string().regex(/^\d+$/, {
+      message: t("form.code.length"),
+    }),
+    password: z.string(),
   });
 
-  type emailFormSchemaType = z.infer<typeof emailFormSchema>;
-  const emailForm = useForm<emailFormSchemaType>({
-    resolver: zodResolver(emailFormSchema),
+  type formSchemaType = z.infer<typeof FormSchema>;
+
+  const form = useForm<formSchemaType>({
+    resolver: zodResolver(FormSchema),
     defaultValues: {
-      email: "",
+      phone: "",
       otp: "",
+      password: "",
     },
   });
 
-  const getUserData = async (userId: string) => {
-    const res = await getUserInfo(userId);
-    emailForm.setValue("email", res.data.data?.email || "");
-    emailForm.setValue("otp", "000000"); //初始化验证码
-    if (!res.data.data?.email) {
-      setEmailStep(2);
-      setIsBindEmail(false);
-    } else {
-      setEmailStep(0);
-      setIsBindEmail(true);
-    }
-    setEmailIsDisabled(false);
-  };
+  const getUserData = useCallback(
+    async (userId: string) => {
+      try {
+        const res = await getUserInfo(userId);
+        if (res.data.data) {
+          form.setValue("phone", res.data.data.phone);
+          form.setValue("otp", "000000");
+        }
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: t("errors.common.serverError"),
+          description: t("errors.connection.failed"),
+          action: <ToastAction altText="Try again">{t("errors.common.tryAgain")}</ToastAction>,
+        });
+      }
+    },
+    [form, toast, t],
+  );
 
   useEffect(() => {
-    if (userId !== null) {
+    if (userId) {
       getUserData(userId);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [userId, getUserData]);
 
-  const executeEmailStep = async (step: number) => {
+  const executePhoneStep = async (step: number) => {
     switch (step) {
-      case 0:
-        setEmailIsDisabled(true);
-        break;
       case 1:
-        setEmailIsDisabled(true);
-        emailForm.setValue("otp", ""); //初始化验证码
+        form.setValue("otp", ""); //初始化验证码
         break;
       case 2: {
-        const res = await verifyEmail({
-          email: emailForm.getValues("email"),
-          otp: emailForm.getValues("otp"),
+        const res = await verifyPhone({
+          phone: form.getValues("phone"),
+          otp: form.getValues("otp"),
         });
-        if (res.data.code === 200) {
+        if (res.data.msg === "手机号校验成功") {
           toast({
             variant: "success",
             title: "Success",
             description: res.data.msg,
           });
+          setPhoneStep(2);
         } else {
           toast({
             variant: "destructive",
@@ -93,49 +92,38 @@ export default function Account({ className }: Readonly<{ className?: string }>)
             description: res.data.msg,
             action: <ToastAction altText="Try again">Try again</ToastAction>,
           });
-          setEmailStep(1);
+          setPhoneStep(1);
           return;
         }
-
-        setEmailIsDisabled(false);
-        emailForm.reset();
-        emailForm.setValue("otp", "000000"); //初始化验证码
         break;
       }
-      case 3:
-        setEmailIsDisabled(true);
-        emailForm.setValue("otp", ""); //初始化验证码
-        setCountdownZero(true);
-        break;
-      case 4: {
-        emailForm.getValues("otp");
-        emailForm.getValues("email");
-        const resp = isBindEmail
-          ? await updateEmail({
-              email: emailForm.getValues("email"),
-              otp: emailForm.getValues("otp"),
-            })
-          : await bindEmail({
-              email: emailForm.getValues("email"),
-              otp: emailForm.getValues("otp"),
+      case 3: {
+        try {
+          const res = await isHasPassword();
+          if (res.data.data.hasPassword) {
+            await updatePassword({
+              newPassword: form.getValues("password"),
             });
-        if (resp.data.code === 200) {
+          } else {
+            await addPassword({
+              password: form.getValues("password"),
+            });
+          }
           toast({
             variant: "success",
             title: "Success",
-            description: resp.data.msg,
+            description: res.data.msg,
           });
-          setEmailStep(0);
-          setCountdownZero(false);
-        } else {
+        } catch (error) {
+          console.error("Error updating password:", error);
           toast({
             variant: "destructive",
             title: "Error",
-            description: resp.data.msg,
+            description: "Failed to update password.",
             action: <ToastAction altText="Try again">Try again</ToastAction>,
           });
-          setEmailStep(3);
         }
+        setPhoneStep(0);
         break;
       }
       default:
@@ -143,60 +131,60 @@ export default function Account({ className }: Readonly<{ className?: string }>)
     }
   };
 
-  async function onSubmitEmail(values: emailFormSchemaType) {
+  async function onSubmitPhone(values: formSchemaType) {
     console.log(values);
-    setEmailStep(emailStep + 1);
-    executeEmailStep(emailStep + 1); //因为setPhoneSteps是异步的，所以还需要直接+1
+    setPhoneStep(phoneStep + 1);
+    executePhoneStep(phoneStep + 1); //因为setPhoneSteps是异步的，所以还需要直接+1
   }
 
   return (
     <div className={`h-full flex flex-row justify-between gap-10 ${className}`}>
-      <div className="flex-1 flex flex-col">
-        <div className="text-[#f43f5e] dark:text-[#d048ef] text-xl card-title">
-          {t("bind-account")}
+      <div className="flex-1 flex flex-col justify-start gap-24">
+        <div className="flex justify-start items-center">
+          <div className="text-[#f43f5e] dark:text-[#d048ef] text-xl card-title">
+            {t("change-password")}
+          </div>
         </div>
-        <div className="h-[80%] flex flex-col justify-center">
-          <Form {...emailForm}>
+        <div className="flex flex-col justify-start gap-6">
+          <Form {...form}>
             <form
-              onSubmit={emailForm.handleSubmit(onSubmitEmail)}
-              className="sm:w-[40%] mx-auto flex flex-col gap-4 "
+              onSubmit={form.handleSubmit(onSubmitPhone)}
+              className="sm:w-[40%] mx-auto flex flex-col gap-4"
             >
               <CustomFormField
-                form={emailForm}
-                name={"email"}
-                placeholder={"请输入邮箱"}
-                label={"绑定邮箱"}
-                disabled={emailDisabled}
+                form={form}
+                name="phone"
+                placeholder={t("phonePlaceholder")}
+                label={t("phone")}
+                disabled={true}
+                hidden={phoneStep > 1}
               />
+
               <CustomFormField
-                form={emailForm}
-                name={"otp"}
-                placeholder={"请输入验证码"}
-                label={"验证码"}
+                form={form}
+                name="otp"
+                placeholder={t("otpPlaceholder")}
+                label={t("verification-code")}
                 isShowLabel={false}
                 isVerify={true}
-                hidden={emailStep === 0 || emailStep === 2}
-                countdownZero={countdownZero}
-                isEmail={true}
+                hidden={phoneStep !== 1}
+              />
+
+              <CustomFormField
+                form={form}
+                name="password"
+                placeholder={t("passwordPlaceholder")}
+                label={t("new-password")}
+                hidden={phoneStep === 0 || phoneStep === 1}
               />
 
               <div className="w-full flex gap-4">
                 <Button
-                  className=" btn  bg-[#f43f5e] dark:bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:bg-red-600  text-white"
+                  className="btn bg-[#f43f5e] dark:bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:bg-red-600 text-white"
                   type="submit"
                 >
-                  {emailStep === 0 ? t("change-email") : t("next-step")}
+                  {phoneStep === 0 ? t("change-password") : t("next-step")}
                 </Button>
-                {emailStep === 0 || !isBindEmail ? null : (
-                  <Button
-                    onClick={() => {
-                      window.location.reload();
-                    }}
-                    className=" btn  bg-[#ebedef] dark:bg-[#727477]  hover:bg-red-600  text-black dark:text-white"
-                  >
-                    {t("return")}
-                  </Button>
-                )}
               </div>
             </form>
           </Form>

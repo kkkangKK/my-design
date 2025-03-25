@@ -25,20 +25,14 @@ export default function Account({ className }: Readonly<{ className?: string }>)
   const [emailStep, setEmailStep] = useState<number>(0); //用于控制表单显示的步骤变化
   const [phoneDisabled, setPhoneIsDisabled] = useState<boolean>(true);
   const [emailDisabled, setEmailIsDisabled] = useState<boolean>(true);
-  const [countdownZero, setCountdownZero] = useState<boolean>(false); //用于控制验证码倒计时
 
   const phoneFormSchema = z.object({
     phone: z.string().regex(/^1[3-9]\d{9}$/, {
       message: t("form.phone.invalid"),
     }),
-    otp: z
-      .string()
-      .length(6, {
-        message: t("form.code.length"),
-      })
-      .regex(/^\d+$/, {
-        message: t("form.code.length"),
-      }),
+    otp: z.string().regex(/^\d+$/, {
+      message: t("form.code.length"),
+    }),
   });
 
   type phoneFormSchemaType = z.infer<typeof phoneFormSchema>;
@@ -53,14 +47,9 @@ export default function Account({ className }: Readonly<{ className?: string }>)
     email: z.string().email({
       message: t("form.email.invalid"),
     }),
-    otp: z
-      .string()
-      .length(6, {
-        message: t("form.code.length"),
-      })
-      .regex(/^\d+$/, {
-        message: t("form.code.length"),
-      }),
+    otp: z.string().regex(/^\d+$/, {
+      message: t("form.code.length"),
+    }),
   });
 
   type emailFormSchemaType = z.infer<typeof emailFormSchema>;
@@ -142,13 +131,12 @@ export default function Account({ className }: Readonly<{ className?: string }>)
 
         setPhoneIsDisabled(false);
         phoneForm.reset();
-        phoneForm.setValue("otp", "000000"); //初始化验证码
+        // phoneForm.setValue("otp", "000000"); //初始化验证码
         break;
       }
       case 3:
         setPhoneIsDisabled(true);
         phoneForm.setValue("otp", ""); //初始化验证码
-        setCountdownZero(true);
         break;
       case 4: {
         phoneForm.getValues("otp");
@@ -164,7 +152,6 @@ export default function Account({ className }: Readonly<{ className?: string }>)
             description: resp.data.msg,
           });
           setPhoneStep(0);
-          setCountdownZero(false);
         } else {
           toast({
             variant: "destructive",
@@ -226,7 +213,6 @@ export default function Account({ className }: Readonly<{ className?: string }>)
       case 3:
         setEmailIsDisabled(true);
         emailForm.setValue("otp", ""); //初始化验证码
-        setCountdownZero(true);
         break;
       case 4: {
         emailForm.getValues("otp");
@@ -247,7 +233,6 @@ export default function Account({ className }: Readonly<{ className?: string }>)
             description: resp.data.msg,
           });
           setEmailStep(0);
-          setCountdownZero(false);
         } else {
           toast({
             variant: "destructive",
@@ -300,7 +285,6 @@ export default function Account({ className }: Readonly<{ className?: string }>)
                   isShowLabel={false}
                   isVerify={true}
                   hidden={phoneStep === 0 || phoneStep === 2}
-                  countdownZero={countdownZero}
                 />
 
                 <div className="w-full flex gap-4">
@@ -342,7 +326,6 @@ export default function Account({ className }: Readonly<{ className?: string }>)
                   isShowLabel={false}
                   isVerify={true}
                   hidden={emailStep === 0 || emailStep === 2}
-                  countdownZero={countdownZero}
                   isEmail={true}
                 />
 
