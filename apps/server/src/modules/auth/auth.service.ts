@@ -43,7 +43,8 @@ export class AuthService {
         username: randomName,
         phone: dto.phone,
       });
-      await this.userService.checkVerificationCode(dto);
+      const isPass = await this.userService.checkVerificationCode(dto);
+      if (!isPass) throw '验证码错误';
 
       payload = {
         userId: userId,
@@ -58,7 +59,8 @@ export class AuthService {
         token: await this.jwtService.sign(payload),
       };
     }
-    await this.userService.checkVerificationCode(dto);
+    const isPass = await this.userService.checkVerificationCode(dto);
+    if (!isPass) throw '验证码错误';
 
     payload = {
       userId: user.id,
@@ -93,7 +95,7 @@ export class AuthService {
   async signup(dto: RegisterDto) {
     if (await this.userService.findWithPhone(dto.phone)) throw '用户名已存在';
     if (!(await this.userService.checkVerificationCode(dto)))
-      throw '手机号校验失败';
+      throw '验证码错误';
     await this.userService.createUser(dto);
   }
 }

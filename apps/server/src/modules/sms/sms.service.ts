@@ -20,17 +20,21 @@ export class SmsService {
     private readonly userService: UserService,
   ) {}
   async sendCodeBySMS(dto: SendCodeBySMSDto) {
-    const code = generateVerificationCode();
+    // const code = generateVerificationCode();
+    // this.cacheService.setCache(dto.phone, code);
+    // const client = Client.createClient();
+    // const sendSmsRequest = new $Dysmsapi20170525.SendSmsRequest({
+    //   signName: GlobalConfig.sms.signName,
+    //   templateCode: GlobalConfig.sms.templateCode,
+    //   phoneNumbers: dto.phone,
+    //   templateParam: JSON.stringify({ code }),
+    // });
+    // const runtime = new $Util.RuntimeOptions({});
+    // await client.sendSmsWithOptions(sendSmsRequest, runtime);
+
+    const code = 123456;
     this.cacheService.setCache(dto.phone, code);
-    const client = Client.createClient();
-    const sendSmsRequest = new $Dysmsapi20170525.SendSmsRequest({
-      signName: GlobalConfig.sms.signName,
-      templateCode: GlobalConfig.sms.templateCode,
-      phoneNumbers: dto.phone,
-      templateParam: JSON.stringify({ code }),
-    });
-    const runtime = new $Util.RuntimeOptions({});
-    await client.sendSmsWithOptions(sendSmsRequest, runtime);
+    console.log('+++++', code);
   }
 
   async verifyPhone(id: string, dto: VerifyPhoneDto) {

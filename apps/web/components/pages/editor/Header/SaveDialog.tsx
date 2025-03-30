@@ -107,7 +107,9 @@ function DialogDemo({
   };
 
   useEffect(() => {
-    getTheWork();
+    if (open) {
+      getTheWork();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 

@@ -28,7 +28,9 @@ function DialogDemo({
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    getTheImg();
+    if (open) {
+      getTheImg();
+    }
   }, [open]);
 
   return (
