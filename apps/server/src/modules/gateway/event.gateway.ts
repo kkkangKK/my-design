@@ -185,6 +185,9 @@ export class EventGateway {
   ) {
     client.leave(roomId);
     const room = await this.getRoomState(roomId);
+    if (room && room.collaborators.length === 0) {
+      await this.cacheService.delCache(this.getRoomKey(roomId));
+    }
     if (room) {
       room.collaborators = room.collaborators.filter((id) => id !== userId);
       room.lastActive = Date.now();

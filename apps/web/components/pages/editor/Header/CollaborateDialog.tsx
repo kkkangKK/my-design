@@ -19,13 +19,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { ToastAction } from "@/components/ui/toast";
 import { toast } from "@/components/ui/use-toast";
-import { GlobalEnvConfig } from "@/config";
+import { useSocketStore } from "@/stores/socket";
 import { useUserStore } from "@/stores/user";
 import { generateRoomCode } from "@/utils/others/generateRoomCode"; // 辅助函数生成合规房间码
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { io, Socket } from "socket.io-client";
 import { z } from "zod";
 
 const roomSchema = z.object({
@@ -40,7 +39,7 @@ export function RoomDialog({ children }: { children: React.ReactNode }) {
   const [mode, setMode] = useState<"create" | "join">();
   const [isInRoom, setIsInRoom] = useState(false);
   const [roomCode, setRoomCode] = useState("");
-  const socketRef = useRef<Socket>();
+  const { socket, connect, disconnect } = useSocketStore();
   const { userId } = useUserStore();
 
   const form = useForm<z.infer<typeof roomSchema>>({
@@ -58,11 +57,9 @@ export function RoomDialog({ children }: { children: React.ReactNode }) {
 
   // 加入房间逻辑
   const handleJoin = (values: z.infer<typeof roomSchema>) => {
-    const newSocket = io(GlobalEnvConfig.SERVER_URL);
-    socketRef.current = newSocket;
+    const newSocket = connect();
 
-    newSocket.on("connect", () => {
-      console.log("Connected to the server!");
+    if (newSocket) {
       setIsInRoom(true);
       setRoomCode(values.code);
       newSocket.emit("joinRoom", { roomId: values.code, userId });
@@ -73,19 +70,19 @@ export function RoomDialog({ children }: { children: React.ReactNode }) {
       });
       console.log("join room--", values.code);
       newSocket.on("collaboratorJoined", (userName: any) => {
-        console.log("collaboratorJoined", userName);
         toast({
-          variant: "success",
-          title: "Success",
+          title: "Tips",
           description: "Collaborator joined: " + userName,
         });
       });
+      newSocket.on("collaboratorLeft", (userName: any) => {
+        toast({
+          title: "Tips",
+          description: "Collaborator Left: " + userName,
+        });
+      });
       setOpen(false);
-    });
-
-    // 添加错误处理
-    newSocket.on("connect_error", (err) => {
-      console.error("Connection error:", err);
+    } else {
       toast({
         variant: "destructive",
         title: "Error",
@@ -94,16 +91,14 @@ export function RoomDialog({ children }: { children: React.ReactNode }) {
       });
       setIsInRoom(false);
       setRoomCode("");
-    });
+    }
   };
 
   // 退出房间逻辑
   const handleLeave = () => {
-    if (socketRef.current) {
-      socketRef.current.emit("leaveRoom", { roomId: roomCode, userId });
-      socketRef.current.close();
-      socketRef.current = undefined;
-      console.log("leave room--", roomCode);
+    if (socket) {
+      socket.emit("leaveRoom", { roomId: roomCode, userId });
+      disconnect();
     }
     setIsInRoom(false);
     setRoomCode("");
@@ -118,9 +113,8 @@ export function RoomDialog({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     return () => {
-      if (socketRef.current) {
-        console.log("组件卸载时清理 socket");
-        socketRef.current.close();
+      if (socket) {
+        disconnect();
       }
     };
   }, []); // 空依赖数组表示只在组件卸载时执行
