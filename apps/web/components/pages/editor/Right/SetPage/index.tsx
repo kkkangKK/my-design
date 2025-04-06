@@ -3,11 +3,13 @@
 import ColorPicker from "@/components/shared/ColorPicker";
 import UploadBackground from "@/components/shared/UploadBackground";
 import { UseElementStore } from "@/stores/element";
+import { useSocketStore } from "@/stores/socket";
 import { useEffect, useRef, useState } from "react";
 
 function SetPage() {
   const parentRef = useRef<HTMLDivElement | null>(null);
   const [childStyle, setChildStyle] = useState({});
+  const { socket } = useSocketStore();
 
   useEffect(() => {
     if (parentRef.current) {
@@ -16,11 +18,43 @@ function SetPage() {
     }
   }, []);
 
-  const { pageBackgroundStyle, setPageBackgroundStyle } = UseElementStore();
+  const { setPageBackgroundStyle, pageBackgroundStyle } = UseElementStore();
 
   //上传图片的回调函数
   const handleOssUrl = (url: string) => {
+    const pageBackgroundStyle = UseElementStore.getState().pageBackgroundStyle;
     setPageBackgroundStyle({ ...pageBackgroundStyle, backgroundImage: `url(${url})` });
+    if (!socket) return;
+    socket.emit("deltaUpdate", {
+      delta: { url },
+      type: "backgroundImgUpdate",
+      elements: UseElementStore.getState().Elements,
+      pageBackgroundStyle,
+    });
+  };
+
+  const handleChangeColor = (e: any) => {
+    const pageBackgroundStyle = UseElementStore.getState().pageBackgroundStyle;
+    setPageBackgroundStyle({ ...pageBackgroundStyle, backgroundColor: e });
+    if (!socket) return;
+    socket.emit("deltaUpdate", {
+      delta: { value: e },
+      type: "backgroundColorUpdate",
+      elements: UseElementStore.getState().Elements,
+      pageBackgroundStyle,
+    });
+  };
+
+  const handleChangeAdopt = (e: any) => {
+    const pageBackgroundStyle = UseElementStore.getState().pageBackgroundStyle;
+    setPageBackgroundStyle({ ...pageBackgroundStyle, backgroundSize: e.target.value });
+    if (!socket) return;
+    socket.emit("deltaUpdate", {
+      delta: { value: e.target.value },
+      type: "backgroundAdoptUpdate",
+      elements: UseElementStore.getState().Elements,
+      pageBackgroundStyle,
+    });
   };
 
   return (
@@ -42,9 +76,7 @@ function SetPage() {
             </label>
             <ColorPicker
               toColor={pageBackgroundStyle.backgroundColor}
-              changeColor={(e) =>
-                setPageBackgroundStyle({ ...pageBackgroundStyle, backgroundColor: e })
-              }
+              changeColor={(e) => handleChangeColor(e)}
             />
           </div>
 
@@ -58,9 +90,7 @@ function SetPage() {
             <select
               id="fontFamily"
               value={pageBackgroundStyle.backgroundSize}
-              onChange={(e) =>
-                setPageBackgroundStyle({ ...pageBackgroundStyle, backgroundSize: e.target.value })
-              }
+              onChange={(e) => handleChangeAdopt(e)}
               className="select select-bordered w-2/3"
             >
               <option value={"100% 100%"}>自动填充</option>

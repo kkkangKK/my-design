@@ -1,5 +1,6 @@
 import { uploadFile } from "@/http/oss";
 import { UseElementStore } from "@/stores/element";
+import { useSocketStore } from "@/stores/socket";
 import { ElementDataType } from "@/types/element-type";
 import imgTemplate from "@/utils/template/imgTemplate";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -8,6 +9,8 @@ import { v4 as uuidv4 } from "uuid";
 
 function ImgList() {
   const { setCurrentElement, addElement, setIsElement } = UseElementStore();
+
+  const { socket } = useSocketStore();
 
   const handleClick = (event: any) => {
     console.log(event.target.innerHTML);
@@ -27,6 +30,14 @@ function ImgList() {
     addElement(element);
     setCurrentElement(id);
     setIsElement(true);
+
+    if (!socket) return;
+    socket.emit("deltaUpdate", {
+      delta: { element },
+      type: "add",
+      elements: UseElementStore.getState().Elements,
+      pageBackgroundStyle: UseElementStore.getState().pageBackgroundStyle,
+    });
   };
 
   // 将kebab-case转换为camelCase的函数

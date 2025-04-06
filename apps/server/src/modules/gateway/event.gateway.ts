@@ -11,10 +11,10 @@ import { CacheService } from '../cache/cache.service';
 import { Cron } from '@nestjs/schedule';
 
 interface RoomState {
-  elements: Record<string, any>;
-  version: number;
+  elements: any[];
   collaborators: string[];
   lastActive: number;
+  pageBackgroundStyle: any;
 }
 
 const ROOM_TTL = 12 * 60 * 60; // 12小时（秒）
@@ -63,9 +63,8 @@ export class EventGateway {
   private isValidRoomState(obj: any): obj is RoomState {
     return (
       obj &&
-      typeof obj.version === 'number' &&
       Array.isArray(obj.collaborators) &&
-      typeof obj.elements === 'object' &&
+      Array.isArray(obj.elements) &&
       typeof obj.lastActive === 'number'
     );
   }
@@ -114,20 +113,37 @@ export class EventGateway {
 
   @SubscribeMessage('joinRoom')
   async handleJoinRoom(
-    @MessageBody() { roomId, userId }: { roomId: string; userId: string },
+    @MessageBody()
+    {
+      roomId,
+      userId,
+      mode,
+      elements,
+      pageBackgroundStyle,
+    }: {
+      roomId: string;
+      userId: string;
+      mode: 'join' | 'create';
+      elements?: any[];
+      pageBackgroundStyle?: any;
+    },
     @ConnectedSocket() client: Socket,
   ) {
-    client.join(roomId);
-
     let room = await this.getRoomState(roomId);
     if (!room) {
+      if (mode === 'join') {
+        client.emit('notRoom', '房间不存在');
+        return;
+      }
       room = {
-        elements: {},
-        version: 0,
         collaborators: [],
         lastActive: Date.now(),
+        elements,
+        pageBackgroundStyle,
       };
     }
+
+    client.join(roomId);
 
     if (!room.collaborators.includes(userId)) {
       room.collaborators.push(userId);
@@ -138,10 +154,11 @@ export class EventGateway {
 
     client.emit('roomSnapshot', {
       elements: room.elements,
-      version: room.version,
+      pageBackgroundStyle: room.pageBackgroundStyle,
       collaborators: room.collaborators,
     });
 
+    client.emit('successInRoom', roomId);
     const user = await this.userService.findUserByUserId(userId);
     client.to(roomId).emit('collaboratorJoined', user.username);
   }
@@ -150,31 +167,55 @@ export class EventGateway {
   async handleDeltaUpdate(
     @MessageBody()
     {
-      roomId,
       delta,
-      clientVersion,
-    }: { roomId: string; delta: any; clientVersion: number },
+      type,
+      elements,
+      pageBackgroundStyle,
+    }: {
+      delta: any;
+      type: string;
+      elements: any[];
+      pageBackgroundStyle: any;
+    },
     @ConnectedSocket() client: Socket,
   ) {
-    const room = await this.getRoomState(roomId);
-    if (!room) return;
+    // 获取客户端所在的第一个非自身房间（假设用户只在一个协作房间中）
+    const rooms = Array.from(client.rooms).filter((room) => room !== client.id);
 
-    if (clientVersion < room.version) {
-      client.emit('conflictDetected', {
-        serverVersion: room.version,
-        serverState: room.elements,
-      });
+    if (rooms.length === 0) {
+      client.emit('error', '未加入任何房间');
       return;
     }
 
-    Object.assign(room.elements, delta.changes);
-    room.version++;
+    const roomId = rooms[0]; // 取第一个房间ID
+
+    const room = await this.getRoomState(roomId);
+    if (!room) {
+      client.emit('error', '房间不存在');
+      return;
+    }
+
+    // if (clientVersion < room.version) {
+    //   client.emit('conflictDetected', {
+    //     serverVersion: room.version,
+    //     serverState: room.elements,
+    //   });
+    //   console.log('版本冲突-----')
+    //   return;
+    // }
+
+    // console.log('deltaUpdate--Elements', elements);
+    console.log('deltaUpdate--delta', delta);
+
+    // room.version++;
     room.lastActive = Date.now();
+    room.elements = elements;
+    room.pageBackgroundStyle = pageBackgroundStyle;
     await this.saveRoomState(roomId, room);
 
-    client.to(roomId).emit('remoteUpdate', {
-      delta: delta.changes,
-      version: room.version,
+    client.broadcast.to(roomId).emit('remoteUpdate', {
+      delta,
+      type,
     });
   }
 

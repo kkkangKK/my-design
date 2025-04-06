@@ -58,7 +58,7 @@ interface ElementStore extends ElementStoreType {
   copiedElement: ElementDataType | null;
   setCopyElement: (id: string) => void;
   // 粘贴元素
-  setPastedElement: () => void;
+  setPastedElement: (id: string) => void;
   // 移动元素
   setMoveElement: (id: string, direction: MoveDirection, amount: number) => void;
   // 当前操作的历史记录
@@ -215,11 +215,11 @@ export const UseElementStore = create<ElementStore>((set, get) => ({
     console.log("待定");
   },
   //粘贴元素
-  setPastedElement: () => {
+  setPastedElement: (id: string) => {
     if (get().copiedElement) {
       const element = {
         ...get().copiedElement!,
-        id: uuidv4(),
+        id: id,
         layerName: get().copiedElement!.layerName + "副本",
       };
       get().addElement(element);

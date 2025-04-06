@@ -1,6 +1,7 @@
 const graphTemplate = [
   //矩形
   {
+    type: "rectangle",
     style: {
       width: "120px",
       height: "50px",
@@ -11,6 +12,7 @@ const graphTemplate = [
   },
   //圆形
   {
+    type: "circle",
     style: {
       width: "120px",
       height: "120px",
@@ -22,6 +24,7 @@ const graphTemplate = [
   },
   //正方形
   {
+    type: "square",
     style: {
       width: "120px",
       height: "120px",
@@ -32,6 +35,7 @@ const graphTemplate = [
   },
   //三角形
   {
+    type: "triangle",
     style: {
       width: "120px",
       height: "120px",
@@ -43,6 +47,7 @@ const graphTemplate = [
   },
   //六边形
   {
+    type: "hexagon",
     style: {
       width: "120px",
       height: "120px",
@@ -54,6 +59,7 @@ const graphTemplate = [
   },
   //五边形
   {
+    type: "pentagon",
     style: {
       width: "120px",
       height: "120px",
@@ -65,6 +71,7 @@ const graphTemplate = [
   },
   //五角形
   {
+    type: "star",
     style: {
       width: "120px",
       height: "120px",
@@ -77,6 +84,7 @@ const graphTemplate = [
   },
   //梯形
   {
+    type: "trapezoid",
     style: {
       width: "120px",
       height: "120px",
@@ -88,6 +96,7 @@ const graphTemplate = [
   },
   //菱形
   {
+    type: "rhombus",
     style: {
       width: "120px",
       height: "120px",
@@ -99,6 +108,7 @@ const graphTemplate = [
   },
   //平行四边形
   {
+    type: "parallelogram",
     style: {
       width: "120px",
       height: "120px",

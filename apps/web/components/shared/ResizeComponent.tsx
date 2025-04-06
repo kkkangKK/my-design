@@ -1,7 +1,9 @@
 import { UseElementStore } from "@/stores/element";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import "@/styles/base/resize-box.css";
+
+import { useSocketStore } from "@/stores/socket";
 
 type directionType = "top-left" | "top-right" | "bottom-left" | "bottom-right";
 
@@ -13,6 +15,8 @@ function ResizeComponent({
   item: any;
 }>) {
   const { setCurrentElement, setIsElement, updateElement, setCurrentSize } = UseElementStore();
+
+  const { socket } = useSocketStore();
 
   // 原始的编辑框height，width，top，left, +4和-2是算上边框的2px宽度的border
   let initHeight = item.props.height
@@ -118,6 +122,14 @@ function ResizeComponent({
       // 移除mousemove和mouseup事件监听器
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
+
+      if (!socket) return;
+      socket.emit("deltaUpdate", {
+        delta: { style, elementId: item.id },
+        type: "updateSize",
+        elements: UseElementStore.getState().Elements,
+        pageBackgroundStyle: UseElementStore.getState().pageBackgroundStyle,
+      });
     };
 
     // 绑定事件监听器到document，以便在移动时也能触发
@@ -136,6 +148,35 @@ function ResizeComponent({
     }
   }, [initHeight, initLeft, initTop, initWidth]);
 
+  useEffect(() => {
+    if (!socket) {
+      console.log("socket is null--updateSize");
+      return;
+    } else {
+      console.log("socket is connected--updateSize");
+      socket.on("remoteUpdate", (body: any) => {
+        if (body.type === "updateSize") {
+          updateElement(body.delta.elementId, body.delta.style);
+          setCurrentSize(body.delta.style.height, body.delta.style.width);
+          setIsElement(true);
+        }
+      });
+    }
+  }, [socket]);
+
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    setCurrentElement(item.id);
+    setIsElement(true);
+    if (item.url) {
+      let urlToOpen = item.url;
+      if (!/^https?:\/\//i.test(urlToOpen)) {
+        urlToOpen = `http://${urlToOpen}`;
+      }
+      window.open(urlToOpen);
+    }
+  };
+
   return (
     <div
       className="draggable-item"
@@ -145,14 +186,7 @@ function ResizeComponent({
       <div
         id="basic-element"
         ref={contentBoxRef}
-        onClick={(e) => {
-          e.stopPropagation();
-          setCurrentElement(item.id);
-          setIsElement(true);
-          if (item.url) {
-            window.open(item.url);
-          }
-        }}
+        onClick={handleClick}
         style={{
           // position: "absolute",
           ...item.props,

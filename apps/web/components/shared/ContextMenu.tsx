@@ -14,7 +14,7 @@ function ContextMenu({ item }: Readonly<{ item: ActionItem[] }>) {
   const handleContextMenu = (e: MouseEvent) => {
     const targetElement = e.target as HTMLElement;
     console.log(targetElement.id);
-    if (targetElement.id !== "basic-element") {
+    if (targetElement.id !== "basic-element" && targetElement.id !== "mid-container") {
       return;
     }
     e.preventDefault();

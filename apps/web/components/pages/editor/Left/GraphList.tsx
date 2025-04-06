@@ -1,10 +1,14 @@
 import { UseElementStore } from "@/stores/element";
+import { useSocketStore } from "@/stores/socket";
 import { ElementDataType } from "@/types/element-type";
 import graphTemplate from "@/utils/template/graphTemplate";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 function GraphList() {
   const { setCurrentElement, addElement, setIsElement } = UseElementStore();
+
+  const { socket } = useSocketStore();
 
   const handleClick = (event: any) => {
     console.log(event.target.innerHTML);
@@ -24,6 +28,14 @@ function GraphList() {
     addElement(element);
     setCurrentElement(id);
     setIsElement(true);
+
+    if (!socket) return;
+    socket.emit("deltaUpdate", {
+      delta: { element },
+      type: "add",
+      elements: UseElementStore.getState().Elements,
+      pageBackgroundStyle: UseElementStore.getState().pageBackgroundStyle,
+    });
   };
 
   // 将kebab-case转换为camelCase的函数
@@ -58,7 +70,7 @@ function GraphList() {
     <div className="grid grid-cols-2 mt-4">
       {graphTemplate.map((item: any) => (
         <button
-          key={item.style.clipPath}
+          key={item.type}
           onClick={(e) => handleClick(e)}
           style={item.style}
           className="mx-auto my-4"

@@ -1,4 +1,5 @@
 import { UseElementStore } from "@/stores/element";
+import { useSocketStore } from "@/stores/socket";
 import { useCallback, useEffect, useState } from "react";
 
 type StyleType =
@@ -13,6 +14,7 @@ const useProps = (initialState: any, styleType: StyleType) => {
   const { updateElement, currentElement, getElement, currentPosition, currentSize } =
     UseElementStore();
   const [elementStyle, setElementStyle] = useState(initialState);
+  const { socket } = useSocketStore();
 
   const reset = useCallback(() => {
     for (const key in initialState) {
@@ -70,6 +72,18 @@ const useProps = (initialState: any, styleType: StyleType) => {
       } else {
         updateElement(currentElement, style);
       }
+
+      if (!socket) return;
+      socket.emit("deltaUpdate", {
+        delta: {
+          currentElement: currentElement,
+          style: style,
+          textValue: updateKey === "textarea" ? updateValue : undefined, //文本内容
+        },
+        type: "propsUpdate",
+        elements: UseElementStore.getState().Elements,
+        pageBackgroundStyle: UseElementStore.getState().pageBackgroundStyle,
+      });
     },
     [currentElement, updateElement, elementStyle, initialState],
   );

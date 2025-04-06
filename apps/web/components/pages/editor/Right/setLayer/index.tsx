@@ -6,11 +6,14 @@ import { useEffect, useRef, useState } from "react";
 
 import "@/styles/base/hiddenScroll.css";
 
+import { useSocketStore } from "@/stores/socket";
+
 import InlineEdit from "./InlineEdit";
 
 function SetLayer() {
   const { Elements, updateElement, setIsCurrentLocked, setCurrentElement, setElements } =
     UseElementStore();
+  const { socket } = useSocketStore();
   const parentRef = useRef<HTMLDivElement | null>(null);
   const [childStyle, setChildStyle] = useState({});
 
@@ -24,9 +27,29 @@ function SetLayer() {
   const handleChange = (id: string, key: string, value: boolean) => {
     if (key === "isHidden") {
       updateElement(id, undefined, undefined, undefined, value);
+      if (!socket) return;
+      socket.emit("deltaUpdate", {
+        delta: {
+          id,
+          value,
+        },
+        type: "isHiddenUpdate",
+        elements: UseElementStore.getState().Elements,
+        pageBackgroundStyle: UseElementStore.getState().pageBackgroundStyle,
+      });
     } else if (key === "isLocked") {
       setIsCurrentLocked(value);
       updateElement(id, undefined, undefined, undefined, undefined, value);
+      if (!socket) return;
+      socket.emit("deltaUpdate", {
+        delta: {
+          id,
+          value,
+        },
+        type: "isLockedUpdate",
+        elements: UseElementStore.getState().Elements,
+        pageBackgroundStyle: UseElementStore.getState().pageBackgroundStyle,
+      });
     }
   };
 
@@ -47,6 +70,13 @@ function SetLayer() {
       let list = Elements;
       list = arrayMove(list, dragData.currentDragIndex, moveIndex);
       setElements(list);
+      if (!socket) return;
+      socket.emit("deltaUpdate", {
+        delta: { list },
+        type: "zIndexUpdate",
+        elements: UseElementStore.getState().Elements,
+        pageBackgroundStyle: UseElementStore.getState().pageBackgroundStyle,
+      });
     }
 
     setDragData({ ...dragData, currentDragId: "" });

@@ -2,11 +2,13 @@
 
 import ColorPicker from "@/components/shared/ColorPicker";
 import { UseElementStore } from "@/stores/element";
+import { useSocketStore } from "@/stores/socket";
 
 import useProps from "../../../../../hooks/useProps";
 
 function ShadowProps() {
   const { updateElement, currentElement, getElement } = UseElementStore();
+  const { socket } = useSocketStore();
 
   const initialState = {
     hOffset: 0,
@@ -70,6 +72,17 @@ function ShadowProps() {
     }
 
     updateElement(currentElement, style);
+
+    if (!socket) return;
+    socket.emit("deltaUpdate", {
+      delta: {
+        currentElement: currentElement,
+        style: style,
+      },
+      type: "propsUpdate",
+      elements: UseElementStore.getState().Elements,
+      pageBackgroundStyle: UseElementStore.getState().pageBackgroundStyle,
+    });
   };
 
   return (

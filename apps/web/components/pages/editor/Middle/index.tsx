@@ -9,8 +9,10 @@ import useGetScreenRatio from "@/hooks/useGetScreenRatio";
 import useHotKey from "@/hooks/useHotKey";
 import { getWork } from "@/http/work";
 import { UseElementStore } from "@/stores/element";
+import { useSocketStore } from "@/stores/socket";
 import { useWorkStore } from "@/stores/work";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 function Middle(props: any) {
   const {
@@ -30,6 +32,7 @@ function Middle(props: any) {
     ifUndo,
   } = UseElementStore();
   const { currentWorkId } = useWorkStore();
+  const { socket } = useSocketStore();
 
   useHotKey();
   const ratio = useGetScreenRatio();
@@ -40,13 +43,28 @@ function Middle(props: any) {
       text: "复制图层",
       action: () => {
         setCopyElement(currentElement);
+        if (!socket) return; //关于这个文件里的图层相关的socket的useEffect已写在useHotKet.ts里了
+        socket.emit("deltaUpdate", {
+          delta: { currentElement },
+          type: "copyElement",
+          elements: UseElementStore.getState().Elements,
+          pageBackgroundStyle: UseElementStore.getState().pageBackgroundStyle,
+        });
       },
     },
     {
       hotkey: "ctrl+v",
       text: "粘贴图层",
       action: () => {
-        setPastedElement();
+        const id = uuidv4();
+        setPastedElement(id);
+        if (!socket) return;
+        socket.emit("deltaUpdate", {
+          delta: { elementId: id },
+          type: "pastedElement",
+          elements: UseElementStore.getState().Elements,
+          pageBackgroundStyle: UseElementStore.getState().pageBackgroundStyle,
+        });
       },
     },
     {
@@ -54,6 +72,13 @@ function Middle(props: any) {
       text: "删除图层",
       action: () => {
         deleteElement(currentElement);
+        if (!socket) return;
+        socket.emit("deltaUpdate", {
+          delta: { currentElement },
+          type: "deleteElement",
+          elements: UseElementStore.getState().Elements,
+          pageBackgroundStyle: UseElementStore.getState().pageBackgroundStyle,
+        });
       },
     },
     {
@@ -61,6 +86,13 @@ function Middle(props: any) {
       text: "取消选中",
       action: () => {
         setCurrentElement("");
+        if (!socket) return;
+        socket.emit("deltaUpdate", {
+          delta: null,
+          type: "setSelectNull",
+          elements: UseElementStore.getState().Elements,
+          pageBackgroundStyle: UseElementStore.getState().pageBackgroundStyle,
+        });
       },
     },
   ];
@@ -90,13 +122,59 @@ function Middle(props: any) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const clickBackground = () => {
+    setIsElement(false);
+    setCurrentElement("");
+    if (!socket) return;
+    socket.emit("deltaUpdate", {
+      delta: { isClickElement: false },
+      type: "clickBackground",
+      elements: UseElementStore.getState().Elements,
+      pageBackgroundStyle: UseElementStore.getState().pageBackgroundStyle,
+    });
+  };
+
+  const clickUndo = () => {
+    undo();
+    if (!socket) return;
+    socket.emit("deltaUpdate", {
+      delta: null,
+      type: "undoUpdate",
+      elements: UseElementStore.getState().Elements,
+      pageBackgroundStyle: UseElementStore.getState().pageBackgroundStyle,
+    });
+  };
+
+  const clickRedo = () => {
+    redo();
+    if (!socket) return;
+    socket.emit("deltaUpdate", {
+      delta: null,
+      type: "redoUpdate",
+      elements: UseElementStore.getState().Elements,
+      pageBackgroundStyle: UseElementStore.getState().pageBackgroundStyle,
+    });
+  };
+
+  useEffect(() => {
+    if (!socket) {
+      console.log("socket is null--");
+      return;
+    } else {
+      console.log("socket is connected--");
+      socket.on("remoteUpdate", (body: any) => {
+        if (body.type === "clickBackground") {
+          setIsElement(body.delta.isClickElement);
+          setCurrentElement("");
+        }
+      });
+    }
+  }, [socket]);
+
   return (
     <div
       className="bg-[#f0f2f5] w-3/5 flex justify-center items-center flex-col relative"
-      onClick={() => {
-        setIsElement(false);
-        setCurrentElement("");
-      }}
+      onClick={() => clickBackground()}
     >
       <h3 className={` ${ratio > 1 ? "absolute top-10" : ""}`}>海报区域</h3>
 
@@ -118,7 +196,7 @@ function Middle(props: any) {
           <button
             className={`mx-1 text-3xl ${!ifUndo && "hover:text-red-500"} ${ifUndo && "text-gray-400"}`}
             disabled={ifUndo}
-            onClick={() => undo()}
+            onClick={() => clickUndo()}
           >
             <span className="icon-[carbon--previous-outline]"></span>
           </button>
@@ -130,7 +208,7 @@ function Middle(props: any) {
           <button
             className={`mx-1 text-3xl ${!ifRedo && "hover:text-red-500"} ${ifRedo && "text-gray-400"}`}
             disabled={ifRedo}
-            onClick={() => redo()}
+            onClick={() => clickRedo()}
           >
             <span className="icon-[carbon--next-outline]"></span>
           </button>
@@ -161,7 +239,7 @@ function Middle(props: any) {
             </div>
           ) : (
             <div
-              key={item.id}
+              key={item.id + "-"}
               className={` ${item.isHidden ? "invisible" : ""}`}
             >
               <ChangePosition item={item} />

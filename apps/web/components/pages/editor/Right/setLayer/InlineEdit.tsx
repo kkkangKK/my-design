@@ -1,6 +1,7 @@
 import useClickOutside from "@/hooks/useClickOutside";
 import useKeyPress from "@/hooks/useKeyPress";
 import { UseElementStore } from "@/stores/element";
+import { useSocketStore } from "@/stores/socket";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 function InlineEdit({
@@ -11,6 +12,7 @@ function InlineEdit({
   id: string;
 }>) {
   const { updateElement } = UseElementStore();
+  const { socket } = useSocketStore();
 
   const [innerValue, setInnerValue] = useState(value);
   const [isEdited, setIsEdited] = useState(false);
@@ -42,6 +44,16 @@ function InlineEdit({
     if (isEdited) {
       setIsEdited(false);
       updateElement(id, undefined, undefined, undefined, undefined, undefined, innerValue);
+      if (!socket) return;
+      socket.emit("deltaUpdate", {
+        delta: {
+          id,
+          innerValue,
+        },
+        type: "inlineNameUpdate",
+        elements: UseElementStore.getState().Elements,
+        pageBackgroundStyle: UseElementStore.getState().pageBackgroundStyle,
+      });
     }
   });
   useKeyPress("Escape", () => {
@@ -62,6 +74,16 @@ function InlineEdit({
     if (isOutside && isEdited) {
       setIsEdited(false);
       updateElement(id, undefined, undefined, undefined, undefined, undefined, innerValue);
+      if (!socket) return;
+      socket.emit("deltaUpdate", {
+        delta: {
+          id,
+          innerValue,
+        },
+        type: "inlineNameUpdate",
+        elements: UseElementStore.getState().Elements,
+        pageBackgroundStyle: UseElementStore.getState().pageBackgroundStyle,
+      });
     }
     //  setIsOutside(false)
   }, [getValidateCheck, id, innerValue, isEdited, isOutside, updateElement]);

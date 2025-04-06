@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { ToastAction } from "@/components/ui/toast";
 import { toast } from "@/components/ui/use-toast";
+import { UseElementStore } from "@/stores/element";
 import { useSocketStore } from "@/stores/socket";
 import { useUserStore } from "@/stores/user";
 import { generateRoomCode } from "@/utils/others/generateRoomCode"; // 辅助函数生成合规房间码
@@ -41,6 +42,7 @@ export function RoomDialog({ children }: { children: React.ReactNode }) {
   const [roomCode, setRoomCode] = useState("");
   const { socket, connect, disconnect } = useSocketStore();
   const { userId } = useUserStore();
+  const { setPageBackgroundStyle, setElements, setCurrentElement } = UseElementStore();
 
   const form = useForm<z.infer<typeof roomSchema>>({
     resolver: zodResolver(roomSchema),
@@ -58,17 +60,33 @@ export function RoomDialog({ children }: { children: React.ReactNode }) {
   // 加入房间逻辑
   const handleJoin = (values: z.infer<typeof roomSchema>) => {
     const newSocket = connect();
-
     if (newSocket) {
-      setIsInRoom(true);
-      setRoomCode(values.code);
-      newSocket.emit("joinRoom", { roomId: values.code, userId });
-      toast({
-        variant: "success",
-        title: "Success",
-        description: "You have joined the room: " + values.code,
+      mode === "join"
+        ? newSocket.emit("joinRoom", { roomId: values.code, userId, mode })
+        : newSocket.emit("joinRoom", {
+            roomId: values.code,
+            userId,
+            mode,
+            elements: UseElementStore.getState().Elements,
+            pageBackgroundStyle: UseElementStore.getState().pageBackgroundStyle,
+          });
+      newSocket.on("notRoom", () => {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "不存在此房间",
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        });
       });
-      console.log("join room--", values.code);
+      newSocket.on("successInRoom", (roomId: string) => {
+        toast({
+          variant: "success",
+          title: "Success",
+          description: "You have joined the room: " + roomId,
+        });
+        setIsInRoom(true);
+        setRoomCode(roomId);
+      });
       newSocket.on("collaboratorJoined", (userName: any) => {
         toast({
           title: "Tips",
@@ -81,6 +99,16 @@ export function RoomDialog({ children }: { children: React.ReactNode }) {
           description: "Collaborator Left: " + userName,
         });
       });
+      if (mode === "join") {
+        newSocket.on("roomSnapshot", (body: any) => {
+          setElements(body.elements);
+          setPageBackgroundStyle(body.pageBackgroundStyle);
+          //解决当加入房间时已有元素存在但无法resize的问题，
+          if (body.elements.length > 0) {
+            setCurrentElement(body.elements[0].id);
+          }
+        });
+      }
       setOpen(false);
     } else {
       toast({
