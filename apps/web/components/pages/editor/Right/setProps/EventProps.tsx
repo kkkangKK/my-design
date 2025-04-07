@@ -40,7 +40,7 @@ function EventProps() {
       <div className="flex justify-between items-center my-4">
         <label
           htmlFor="fontSize"
-          className="block mb-1 w-1/3"
+          className="text-red-400 font-semibold block mb-1 w-1/3"
         >
           点击跳转：
         </label>

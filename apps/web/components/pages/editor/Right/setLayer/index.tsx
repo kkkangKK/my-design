@@ -100,7 +100,7 @@ function SetLayer() {
         {Elements.map((item, index) => (
           <div
             key={item.id}
-            className={`${item.id == dragData.currentDragId ? "border-red-500 bg-red-500 text-white" : "border-gray-300 border-solid"} parentItem flex justify-around w-full h-14 relative  ${
+            className={`${item.id == dragData.currentDragId ? "border-red-300 bg-red-300 text-white" : "border-gray-300 border-solid"} parentItem flex justify-around w-full h-14 relative  ${
               index === Elements.length - 1 ? "" : "border-b"
             }`}
             style={{ zIndex: 10 }}

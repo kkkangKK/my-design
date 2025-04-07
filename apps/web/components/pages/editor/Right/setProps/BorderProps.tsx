@@ -19,7 +19,7 @@ function BorderProps() {
       <div className="flex justify-between items-center my-4">
         <label
           htmlFor="borderStyle"
-          className="block mb-1 w-1/3"
+          className="text-red-400 font-semibold block mb-1 w-1/3"
         >
           边框类型：
         </label>
@@ -40,7 +40,7 @@ function BorderProps() {
       <div className="flex justify-between items-center my-4">
         <label
           htmlFor="borderWidth"
-          className="block mb-1 w-1/3"
+          className="text-red-400 font-semibold block mb-1 w-1/3"
         >
           边框宽度：
         </label>
@@ -58,7 +58,7 @@ function BorderProps() {
       <div className="flex justify-between items-center my-4">
         <label
           htmlFor="borderRadius"
-          className="block mb-1 w-1/3"
+          className="text-red-400 font-semibold block mb-1 w-1/3"
         >
           边框圆角：
         </label>
@@ -76,7 +76,7 @@ function BorderProps() {
       <div className="flex justify-between items-center my-4">
         <label
           htmlFor="color"
-          className="block mb-1 w-1/3"
+          className="text-red-400 font-semibold block mb-1 w-1/3"
         >
           边框颜色：
         </label>

@@ -41,7 +41,7 @@ function Left() {
   return (
     <div
       id="editor-left"
-      className="bg-white w-1/5 overflow-auto hiddenScrollbar"
+      className="bg-red-50 w-1/5 overflow-auto hiddenScrollbar"
     >
       <Tab tabs={tabs} />
     </div>

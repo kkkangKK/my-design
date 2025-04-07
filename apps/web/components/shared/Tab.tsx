@@ -31,7 +31,7 @@ function Tab({ tabs }: TabsProps) {
           <button
             key={tab.id}
             role="tab"
-            className={`tab pt-2 pb-8 ${tab.id === activeTabIndex ? "tab-active" : ""}`}
+            className={`tab bg-[linear-gradient(to_top,white_0%,rgba(250,113,113,0.3)_50%,white_100%)] pt-2 pb-8 font-semibold text-[#8B475D] ${tab.id === activeTabIndex ? "tab-active border-b-2 !border-[#8B475D]" : ""}`}
             onClick={() => handleTabClick(tab.id)}
           >
             {tab.label}

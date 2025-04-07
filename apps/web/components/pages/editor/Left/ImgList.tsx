@@ -136,7 +136,7 @@ function ImgList() {
         </div>
       ) : null}
       <div className="mx-auto mt-10 flex justify-center items-center relative">
-        <button className="cursor-pointer bg-[#3D7FFF] items-center justify-center flex gap-2 rounded-lg text-sm font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#3D7FFF]/90 text-white h-10 px-8 py-2">
+        <button className="cursor-pointer bg-red-400 items-center justify-center flex gap-2 rounded-lg text-sm font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#3D7FFF]/90 text-white h-10 px-8 py-2">
           <span className="font-bold icon-[carbon--upload]"></span>
           上传素材
         </button>

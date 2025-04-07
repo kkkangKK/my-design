@@ -14,6 +14,8 @@ import { useWorkStore } from "@/stores/work";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
+import SnowBackground from "./SnowBackground";
+
 function Middle(props: any) {
   const {
     Elements,
@@ -172,11 +174,10 @@ function Middle(props: any) {
   }, [socket]);
 
   return (
-    <div
-      className="bg-[#f0f2f5] w-3/5 flex justify-center items-center flex-col relative"
-      onClick={() => clickBackground()}
-    >
-      <h3 className={` ${ratio > 1 ? "absolute top-10" : ""}`}>海报区域</h3>
+    <SnowBackground onClick={() => clickBackground()}>
+      <h3 className={`text-red-800 ${ratio > 1 ? "absolute top-10" : "mt-6 font-semibold"}`}>
+        海报区域
+      </h3>
 
       <div className="absolute right-8 top-14 flex flex-row">
         <BaseTooltips
@@ -184,7 +185,7 @@ function Middle(props: any) {
           position={"top"}
         >
           <Dialog>
-            <button className={`mx-1 text-3xl "hover:text-red-500 `}>
+            <button className={`mx-1 text-3xl hover:text-red-800 text-red-500`}>
               <span className="icon-[carbon--help]"></span>
             </button>
           </Dialog>
@@ -194,10 +195,11 @@ function Middle(props: any) {
           position={"top"}
         >
           <button
-            className={`mx-1 text-3xl ${!ifUndo && "hover:text-red-500"} ${ifUndo && "text-gray-400"}`}
+            className={`mx-1 text-3xl ${!ifUndo && "hover:text-red-800 text-red-500"} ${ifUndo && "text-gray-400"}`}
             disabled={ifUndo}
             onClick={() => clickUndo()}
           >
+            {/* <span className="icon-[carbon--previous-outline] bg-red-600"></span> */}
             <span className="icon-[carbon--previous-outline]"></span>
           </button>
         </BaseTooltips>
@@ -206,7 +208,7 @@ function Middle(props: any) {
           position={"top"}
         >
           <button
-            className={`mx-1 text-3xl ${!ifRedo && "hover:text-red-500"} ${ifRedo && "text-gray-400"}`}
+            className={`mx-1 text-3xl ${!ifRedo && "hover:text-red-800 text-red-500"} ${ifRedo && "text-gray-400"}`}
             disabled={ifRedo}
             onClick={() => clickRedo()}
           >
@@ -247,7 +249,7 @@ function Middle(props: any) {
           ),
         )}
       </div>
-    </div>
+    </SnowBackground>
   );
 }
 

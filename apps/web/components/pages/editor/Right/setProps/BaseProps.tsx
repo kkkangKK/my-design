@@ -27,7 +27,7 @@ function BaseProps() {
       <div className="flex justify-between items-center my-4">
         <label
           htmlFor="textarea"
-          className="block mb-1 w-1/3"
+          className="text-red-400 font-semibold block mb-1 w-1/3"
         >
           文本：
         </label>
@@ -43,7 +43,7 @@ function BaseProps() {
       <div className="flex justify-between items-center my-4">
         <label
           htmlFor="fontSize"
-          className="block mb-1 w-1/3"
+          className="text-red-400 font-semibold block mb-1 w-1/3"
         >
           字号：
         </label>
@@ -60,7 +60,7 @@ function BaseProps() {
       <div className="flex justify-between items-center my-4">
         <label
           htmlFor="fontFamily"
-          className="block mb-1 w-1/3"
+          className="text-red-400 font-semibold block mb-1 w-1/3"
         >
           字体：
         </label>
@@ -80,7 +80,7 @@ function BaseProps() {
       <div className="flex justify-between items-center my-4">
         <label
           htmlFor="fontStyle"
-          className="block mb-1 w-1/3"
+          className="text-red-400 font-semibold block mb-1 w-1/3"
         >
           字样：
         </label>
@@ -118,7 +118,7 @@ function BaseProps() {
       <div className="flex justify-between items-center my-4">
         <label
           htmlFor="lineHeight"
-          className="block mb-1 w-1/3"
+          className="text-red-400 font-semibold block mb-1 w-1/3"
         >
           行高：
         </label>
@@ -135,7 +135,7 @@ function BaseProps() {
       <div className="flex justify-between items-center my-4">
         <label
           htmlFor="radio"
-          className="block mb-1 w-1/3"
+          className="text-red-400 font-semibold block mb-1 w-1/3"
         >
           对齐：
         </label>
@@ -172,7 +172,7 @@ function BaseProps() {
       <div className="flex justify-between items-center my-4">
         <label
           htmlFor="color"
-          className="block mb-1 w-1/3"
+          className="text-red-400 font-semibold block mb-1 w-1/3"
         >
           文字颜色：
         </label>
@@ -185,7 +185,7 @@ function BaseProps() {
       <div className="flex justify-between items-center my-4">
         <label
           htmlFor="color"
-          className="block mb-1 w-1/3"
+          className="text-red-400 font-semibold block mb-1 w-1/3"
         >
           背景颜色：
         </label>

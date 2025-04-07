@@ -10,7 +10,7 @@ interface LogoProps {
 
 const BaseLogo: React.FC<LogoProps> = ({ size = "large", className, ...props }) => {
   return (
-    <div className="w-72 flex items-center">
+    <div className="w-1/3 flex items-center">
       <Link
         href="/"
         className={cn("flex logo flex-shrink-0 items-center gap-3 outline-none", className)}
@@ -27,10 +27,15 @@ const BaseLogo: React.FC<LogoProps> = ({ size = "large", className, ...props }) 
             className="project-title h-7 pl-5 text-xl"
             data-text="Awesome"
           >
-            <span className="actual-text">&nbsp;PosterCraft&nbsp;</span>
+            <span
+              className="  actual-text t"
+              style={{ color: "#EE6363" }}
+            >
+              &nbsp;PosterCraft&nbsp;
+            </span>
             <span
               aria-hidden="true"
-              className="hover-text"
+              className="text-red hover-text"
             >
               &nbsp;PosterCraft&nbsp;
             </span>

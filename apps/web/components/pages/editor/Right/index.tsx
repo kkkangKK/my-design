@@ -86,7 +86,7 @@ function Right(props: any) {
   }, [socket]);
 
   return (
-    <div className="bg-[#ffffff] w-1/5 h-full flex">
+    <div className="bg-red-50 w-1/5 h-full flex">
       <Tab tabs={tabs} />
     </div>
   );

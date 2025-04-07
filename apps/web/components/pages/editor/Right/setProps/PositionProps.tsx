@@ -15,7 +15,7 @@ function PositionProps() {
       <div className="flex justify-between items-center my-4">
         <label
           htmlFor="left"
-          className="block mb-1 w-1/3"
+          className="text-red-400 font-semibold block mb-1 w-1/3"
         >
           X轴坐标：
         </label>
@@ -32,7 +32,7 @@ function PositionProps() {
       <div className="flex justify-between items-center my-4">
         <label
           htmlFor="top"
-          className="block mb-1 w-1/3"
+          className="text-red-400 font-semibold block mb-1 w-1/3"
         >
           y轴坐标：
         </label>

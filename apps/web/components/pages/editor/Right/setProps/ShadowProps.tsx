@@ -90,7 +90,7 @@ function ShadowProps() {
       <div className="flex justify-between items-center my-4">
         <label
           htmlFor="hOffset"
-          className="block mb-1 w-1/3"
+          className="text-red-400 font-semibold block mb-1 w-1/3"
         >
           阴影水平偏移：
         </label>
@@ -108,7 +108,7 @@ function ShadowProps() {
       <div className="flex justify-between items-center my-4">
         <label
           htmlFor="vOffset"
-          className="block mb-1 w-1/3"
+          className="text-red-400 font-semibold block mb-1 w-1/3"
         >
           阴影竖直偏移：
         </label>
@@ -126,7 +126,7 @@ function ShadowProps() {
       <div className="flex justify-between items-center my-4">
         <label
           htmlFor="spread"
-          className="block mb-1 w-1/3"
+          className="text-red-400 font-semibold block mb-1 w-1/3"
         >
           阴影大小：
         </label>
@@ -143,7 +143,7 @@ function ShadowProps() {
       <div className="flex justify-between items-center my-4">
         <label
           htmlFor="blur"
-          className="block mb-1 w-1/3"
+          className="text-red-400 font-semibold block mb-1 w-1/3"
         >
           阴影模糊：
         </label>
@@ -160,7 +160,7 @@ function ShadowProps() {
       <div className="flex justify-between items-center my-4">
         <label
           htmlFor="opacity"
-          className="block mb-1 w-1/3"
+          className="text-red-400 font-semibold block mb-1 w-1/3"
         >
           透明度：
         </label>
@@ -178,7 +178,7 @@ function ShadowProps() {
       <div className="flex justify-between items-center my-4">
         <label
           htmlFor="color"
-          className="block mb-1 w-1/3"
+          className="text-red-400 font-semibold block mb-1 w-1/3"
         >
           阴影颜色：
         </label>

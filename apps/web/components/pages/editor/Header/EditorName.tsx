@@ -3,7 +3,7 @@ interface EditorNameProps {
 }
 
 const EditorName: React.FC<EditorNameProps> = ({ name = "未命名作品" }) => {
-  return <div className="text-xl font-bold">{name}</div>;
+  return <div className="w-1/3 flex justify-center text-xl font-bold">{name}</div>;
 };
 
 export default EditorName;

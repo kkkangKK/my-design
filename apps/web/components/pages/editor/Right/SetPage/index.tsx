@@ -70,7 +70,7 @@ function SetPage() {
           <div className="flex justify-between items-center my-4">
             <label
               htmlFor="color"
-              className="block mb-1 w-1/3 text-sm"
+              className="block mb-1 w-1/3 text-sm text-red-400 font-semibold"
             >
               背景颜色：
             </label>
@@ -83,7 +83,7 @@ function SetPage() {
           <div className="flex justify-between items-center my-4">
             <label
               htmlFor="fontFamily"
-              className="block mb-1 w-1/3 text-sm"
+              className="block mb-1 w-1/3 text-sm text-red-400 font-semibold"
             >
               适应方式：
             </label>
