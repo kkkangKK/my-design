@@ -44,6 +44,28 @@ const UserInfos: React.FC<UserInfosProps> = (params) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const [isCopied, setIsCopied] = useState(false);
+
+  // 复制当前 URL 到剪贴板
+  const copyToClipboard = async () => {
+    try {
+      const url = window.location.href;
+      await navigator.clipboard.writeText(url);
+      setIsCopied(true);
+    } catch (err) {
+      console.error("复制失败:", err);
+      alert("无法自动复制，请手动复制地址栏链接");
+    }
+  };
+
+  // 3秒后自动重置复制状态
+  useEffect(() => {
+    if (isCopied) {
+      const timer = setTimeout(() => setIsCopied(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isCopied]);
+
   return (
     <div className="flex flex-wrap justify-between w-full py-8">
       <div className="flex flex-col justify-between items-center flex-1 w-full h-full pl-5">
@@ -71,9 +93,28 @@ const UserInfos: React.FC<UserInfosProps> = (params) => {
           {params.isMyself ? (
             <div className="flex justify-start gap-5">
               <BaseButton onClick={() => router.push("../settings")}>
-                {t("editPersonalInformation")}
+                <div className="flex items-center gap-1">
+                  <span className="icon-[carbon--edit]"></span>
+                  <span>{t("editPersonalInformation")}</span>
+                </div>
               </BaseButton>
-              <BaseButton>{t("share")}</BaseButton>
+              <BaseButton onClick={copyToClipboard}>
+                {isCopied ? (
+                  <>
+                    <div className="flex items-center gap-1">
+                      <span className="icon-[carbon--checkmark-outline]"></span>
+                      <span>已复制</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-1">
+                      <span className="icon-[carbon--copy-link]"></span>
+                      <span>分享个人链接</span>
+                    </div>
+                  </>
+                )}
+              </BaseButton>
             </div>
           ) : null}
         </div>

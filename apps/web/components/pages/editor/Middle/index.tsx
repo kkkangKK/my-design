@@ -33,7 +33,7 @@ function Middle(props: any) {
     ifRedo,
     ifUndo,
   } = UseElementStore();
-  const { currentWorkId } = useWorkStore();
+  const { currentWorkId, setWorkName } = useWorkStore();
   const { socket } = useSocketStore();
 
   useHotKey();
@@ -102,6 +102,8 @@ function Middle(props: any) {
   const getTheWork = async () => {
     if (currentWorkId) {
       const res = await getWork(currentWorkId);
+      console.log("res", res);
+      setWorkName(res.data.data.title);
       setElements(res.data.data.content.Elements ?? []);
       setPageBackgroundStyle({ ...res.data.data.content.pageBackgroundStyle });
     } else {

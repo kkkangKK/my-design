@@ -1,9 +1,14 @@
+"use client";
+
+import { useWorkStore } from "@/stores/work";
+
 interface EditorNameProps {
-  name: string;
+  className?: string;
 }
 
-const EditorName: React.FC<EditorNameProps> = ({ name = "未命名作品" }) => {
-  return <div className="w-1/3 flex justify-center text-xl font-bold">{name}</div>;
+const EditorName: React.FC<EditorNameProps> = () => {
+  const { workName } = useWorkStore();
+  return <div className="w-1/3 flex justify-center text-xl font-bold">作品：{workName}</div>;
 };
 
 export default EditorName;

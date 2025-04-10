@@ -16,7 +16,7 @@ const ProjectCard: React.FC<ProjectCardProps> = () => {
           </div>
           <span className="trail"></span>
         </div>
-        <span className="logo-bottom-text">LeoStar</span>
+        <span className="logo-bottom-text">kkkang</span>
       </div>
       <span className="bottom-text">poster-craft</span>
     </div>

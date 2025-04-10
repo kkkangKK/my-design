@@ -15,7 +15,7 @@ const EditorHeader: React.FC<EditorHeaderProps> = () => {
         size="large"
         title="logo"
       />
-      <EditorName name="未命名作品" />
+      <EditorName />
       <EditorFeature />
     </header>
   );

@@ -2,7 +2,9 @@ import { create } from "zustand";
 
 interface WorkState {
   currentWorkId: string | null;
+  workName: string | null;
   setWork: (state: string | null) => void;
+  setWorkName: (state: string | null) => void;
 }
 
 export const useWorkStore = create<WorkState>((set) => {
@@ -29,6 +31,12 @@ export const useWorkStore = create<WorkState>((set) => {
           }
         }
         return { currentWorkId: state };
+      });
+    },
+    workName: "未命名作品",
+    setWorkName: (state: string | null) => {
+      set(() => {
+        return { workName: state };
       });
     },
   };
