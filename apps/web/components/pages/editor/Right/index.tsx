@@ -4,6 +4,7 @@ import SetLayer from "@/components/pages/editor/Right/setLayer";
 import SetPage from "@/components/pages/editor/Right/SetPage";
 import SetProps from "@/components/pages/editor/Right/setProps";
 import Tab from "@/components/shared/Tab";
+import { useTemplate } from "@/hooks/useTemplate";
 import { UseElementStore } from "@/stores/element";
 import { useSocketStore } from "@/stores/socket";
 import { useEffect } from "react";
@@ -18,6 +19,7 @@ function Right(props: any) {
     setPageBackgroundStyle,
   } = UseElementStore();
   const { socket } = useSocketStore();
+  const isAuthor = useTemplate();
 
   const tabs = [
     { id: 0, label: "属性设置", content: isElement && !isCurrentLocked ? <SetProps /> : null },
@@ -85,11 +87,7 @@ function Right(props: any) {
     }
   }, [socket]);
 
-  return (
-    <div className="bg-red-50 w-1/5 h-full flex">
-      <Tab tabs={tabs} />
-    </div>
-  );
+  return <div className="bg-red-50 w-1/5 h-full flex">{isAuthor && <Tab tabs={tabs} />}</div>;
 }
 
 export default Right;

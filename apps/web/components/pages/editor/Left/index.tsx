@@ -8,9 +8,10 @@ import TextList from "./TextList";
 
 import "@/styles/base/hiddenScroll.css";
 
+import { useTemplate } from "@/hooks/useTemplate";
 import { UseElementStore } from "@/stores/element";
 import { useSocketStore } from "@/stores/socket";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 function Left() {
   const tabs = [
@@ -21,6 +22,7 @@ function Left() {
 
   const { setCurrentElement, addElement, setIsElement } = UseElementStore();
   const { socket } = useSocketStore();
+  const isAuthor = useTemplate();
 
   useEffect(() => {
     if (!socket) {
@@ -43,7 +45,7 @@ function Left() {
       id="editor-left"
       className="bg-red-50 w-1/5 overflow-auto hiddenScrollbar"
     >
-      <Tab tabs={tabs} />
+      {isAuthor && <Tab tabs={tabs} />}
     </div>
   );
 }

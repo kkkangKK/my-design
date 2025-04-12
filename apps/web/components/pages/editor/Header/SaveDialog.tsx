@@ -54,6 +54,8 @@ function DialogDemo({
 
   const [open, setOpen] = useState(false);
 
+  const [isTemplate, setIsTemplate] = useState(false);
+
   async function onSubmit(values: FormSchemaType) {
     const params = {
       title: values.title,
@@ -63,8 +65,8 @@ function DialogDemo({
         Elements,
         pageBackgroundStyle,
       },
-      isTemplate: false,
-      isPublic: false,
+      isTemplate: isTemplate,
+      isPublic: isTemplate,
       status: 1,
     };
     console.log(params);
@@ -103,6 +105,7 @@ function DialogDemo({
       const res = await getWork(currentWorkId);
       form.setValue("title", res.data.data.title);
       form.setValue("desc", res.data.data.desc);
+      setIsTemplate(res.data.data.isTemplate);
     }
   };
 

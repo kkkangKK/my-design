@@ -7,6 +7,7 @@ import ContextMenu from "@/components/shared/ContextMenu";
 import ResizeComponent from "@/components/shared/ResizeComponent";
 import useGetScreenRatio from "@/hooks/useGetScreenRatio";
 import useHotKey from "@/hooks/useHotKey";
+import { useTemplate } from "@/hooks/useTemplate";
 import { getWork } from "@/http/work";
 import { UseElementStore } from "@/stores/element";
 import { useSocketStore } from "@/stores/socket";
@@ -121,6 +122,8 @@ function Middle(props: any) {
     }
   };
 
+  const isAuthor = useTemplate();
+
   useEffect(() => {
     getTheWork();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -181,43 +184,45 @@ function Middle(props: any) {
         海报区域
       </h3>
 
-      <div className="absolute right-8 top-14 flex flex-row">
-        <BaseTooltips
-          tooltipText={"快捷键提示"}
-          position={"top"}
-        >
-          <Dialog>
-            <button className={`mx-1 text-3xl hover:text-red-800 text-red-500`}>
-              <span className="icon-[carbon--help]"></span>
+      {isAuthor && (
+        <div className="absolute right-8 top-14 flex flex-row">
+          <BaseTooltips
+            tooltipText={"快捷键提示"}
+            position={"top"}
+          >
+            <Dialog>
+              <button className={`mx-1 text-3xl hover:text-red-800 text-red-500`}>
+                <span className="icon-[carbon--help]"></span>
+              </button>
+            </Dialog>
+          </BaseTooltips>
+          <BaseTooltips
+            tooltipText={"回退"}
+            position={"top"}
+          >
+            <button
+              className={`mx-1 text-3xl ${!ifUndo && "hover:text-red-800 text-red-500"} ${ifUndo && "text-gray-400"}`}
+              disabled={ifUndo}
+              onClick={() => clickUndo()}
+            >
+              {/* <span className="icon-[carbon--previous-outline] bg-red-600"></span> */}
+              <span className="icon-[carbon--previous-outline]"></span>
             </button>
-          </Dialog>
-        </BaseTooltips>
-        <BaseTooltips
-          tooltipText={"回退"}
-          position={"top"}
-        >
-          <button
-            className={`mx-1 text-3xl ${!ifUndo && "hover:text-red-800 text-red-500"} ${ifUndo && "text-gray-400"}`}
-            disabled={ifUndo}
-            onClick={() => clickUndo()}
+          </BaseTooltips>
+          <BaseTooltips
+            tooltipText={"前进"}
+            position={"top"}
           >
-            {/* <span className="icon-[carbon--previous-outline] bg-red-600"></span> */}
-            <span className="icon-[carbon--previous-outline]"></span>
-          </button>
-        </BaseTooltips>
-        <BaseTooltips
-          tooltipText={"前进"}
-          position={"top"}
-        >
-          <button
-            className={`mx-1 text-3xl ${!ifRedo && "hover:text-red-800 text-red-500"} ${ifRedo && "text-gray-400"}`}
-            disabled={ifRedo}
-            onClick={() => clickRedo()}
-          >
-            <span className="icon-[carbon--next-outline]"></span>
-          </button>
-        </BaseTooltips>
-      </div>
+            <button
+              className={`mx-1 text-3xl ${!ifRedo && "hover:text-red-800 text-red-500"} ${ifRedo && "text-gray-400"}`}
+              disabled={ifRedo}
+              onClick={() => clickRedo()}
+            >
+              <span className="icon-[carbon--next-outline]"></span>
+            </button>
+          </BaseTooltips>
+        </div>
+      )}
 
       <div
         id="mid-container"
@@ -231,6 +236,11 @@ function Middle(props: any) {
           overflow: "auto",
         }}
       >
+        {/* 当为模板展示时用于遮挡移动缩放组件时的透明盒子 */}
+        {!isAuthor && (
+          <div className="w-[375px] h-[667px] opacity-0 absolute z-50 top-0 left-0"></div>
+        )}
+
         <ContextMenu item={actionItem} />
 
         {Elements.map((item: any) =>
