@@ -20,7 +20,10 @@ async function bootstrap() {
     origin: [
       /^http:\/\/localhost(:\d+)?$/,
       /^https:\/\/poster-craft\.leostar\.top(:81)?$/,
+      /^http:\/\/192\.168\.\d+\.\d+(:\d+)?$/,
     ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // 明确允许的方法
+    allowedHeaders: ['Content-Type', 'Authorization'], // 允许的请求头
   });
 
   app.setViewEngine({

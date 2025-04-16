@@ -14,6 +14,8 @@ export const useTemplate = () => {
     if (currentWorkId) {
       const res = await getWork(currentWorkId);
       setIsAuthor(res.data.data.userId === userId);
+    } else {
+      setIsAuthor(true);
     }
   };
 
