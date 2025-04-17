@@ -4,7 +4,7 @@ import { GetMyWorksListDto, WorkDto } from './dto/work.dto';
 // import { work } from '@poster-craft/schema';
 import { work } from '@kkkang/schema';
 // import { work } from '../../../../../packages/schema';
-import { and, eq } from 'drizzle-orm';
+import { and, desc, eq } from 'drizzle-orm';
 import { JwtPayloadDto } from '../auth/dto/jwt.dto';
 import { ResponseData } from 'src/interceptor/responseData';
 import { GlobalConfig } from 'src/config';
@@ -186,7 +186,10 @@ export class WorkService {
                 : eq(work.userId, userId)
         : (work, { eq }) =>
             and(eq(work.isPublic, true), eq(work.isTemplate, true)),
-      orderBy: (work, { asc }) => asc(work.createdAt),
+      orderBy: (work, { asc }) =>
+        isTemplateList
+          ? desc(work.copiedCount) // 如果是模板列表，则按照 copied_count 升序排序
+          : desc(work.createdAt), // 如果是非模板列表，则按照 createdAt 升序排序
       ...(isPaging && { limit: Number(dto.pageSize) }),
       ...(isPaging && { offset: (dto.pageIndex - 1) * dto.pageSize }),
     });

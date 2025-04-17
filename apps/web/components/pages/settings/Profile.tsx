@@ -10,6 +10,7 @@ import { getUserInfo, updateUserInfo } from "@/http/user";
 import { useUserStore } from "@/stores/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -131,7 +132,16 @@ export default function Profile() {
         </div>
       </div>
       {/* Lottie 动画占位 */}
-      <div className="h-full flex-1  bg-blue-500/30 rounded-lg "></div>
+      <div className="h-full flex-1  bg-blue-500/30 rounded-lg ">
+        <Image
+          className="w-full h-full object-cover"
+          src="/decorate/window-2.png"
+          alt="window"
+          width={150}
+          height={150}
+          sizes="100vh"
+        />
+      </div>
     </div>
   );
 }

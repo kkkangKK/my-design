@@ -3,7 +3,6 @@
 import BaseButton from "@/components/base/BaseButton";
 import ProjectCard from "@/components/shared/ProjectCard";
 import { getUserInfo } from "@/http/user";
-import { useUserStore } from "@/stores/user";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -16,7 +15,6 @@ interface UserInfosProps {
 const UserInfos: React.FC<UserInfosProps> = (params) => {
   const router = useRouter();
   const t = useTranslations();
-  const { userId } = useUserStore();
 
   const Info = {
     avatar: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp", //默认头像
@@ -38,6 +36,10 @@ const UserInfos: React.FC<UserInfosProps> = (params) => {
     }));
   };
   useEffect(() => {
+    //这样提取userId是因为有可能是别人分享的id
+    const currentPath = window.location.pathname;
+    const userId = currentPath.split("/user/")[1]; // 提取 'user/' 后的部分
+
     if (userId !== null) {
       getUserData(userId);
     }

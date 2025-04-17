@@ -4,6 +4,8 @@ interface BaseCardProps {
   title?: string;
   description?: string;
   imgUrl: string;
+  copied_count?: number;
+  isTemplate?: boolean;
   onClick?: () => void;
 }
 
@@ -11,6 +13,8 @@ const BaseCard: React.FC<BaseCardProps> = ({
   title = "暂无标题",
   imgUrl,
   description = "暂无描述",
+  copied_count = 0,
+  isTemplate = false,
   onClick,
 }) => {
   return (
@@ -22,17 +26,25 @@ const BaseCard: React.FC<BaseCardProps> = ({
         height={535}
         width={302}
       />
-      <div className="block flex-1 bg-white h-[95px] px-4 glass">
-        <h4 className="text-xs font-bold text-white dark:text-[#161616] py-4 truncate max-w-[90%] 2xl:max-w-none">
-          {title}
-        </h4>
-        <div className="flex items-center justify-between font-bold text-[0.625rem]">
+      <div className="block flex-1 h-[95px] px-4 glass">
+        <div className="flex justify-between items-center">
+          <h4 className="text-base font-bold text-[#6b7280] dark:text-[#161616] py-4 truncate max-w-[90%] 2xl:max-w-none">
+            {title}
+          </h4>
+          {isTemplate && (
+            <div className="flex justify-between items-center gap-1">
+              <span className="text-lg text-red-600 icon-[carbon--face-activated]"></span>
+              <span className="text-xs text-[#6b7280]">{copied_count}</span>
+            </div>
+          )}
+        </div>
+        <div className="flex items-center justify-between font-bold text-xs">
           <div className="flex flex-col">
-            <span className="text-white dark:text-[#646464]">{description}</span>
+            <span className="text-[#6b7280] dark:text-[#646464]">{description}</span>
           </div>
           <button
             onClick={onClick}
-            className="text-white dark:text-[#161616] hover:bg-rose-500 dark:hover:bg-[#E730CA] dark:hover:text-white border rounded-full dark:border-[#161616] border-solid hover:border-rose-500 dark:hover:border-[#E730CA] w-16 h-6 transition-colors"
+            className="text-[#6b7280] dark:text-[#161616] hover:bg-rose-500 dark:hover:bg-[#E730CA] dark:hover:text-white border border-[#6b7280] rounded-full dark:border-[#161616] border-solid hover:border-rose-500 dark:hover:border-[#E730CA] w-16 h-6 transition-colors"
           >
             查看详情
           </button>

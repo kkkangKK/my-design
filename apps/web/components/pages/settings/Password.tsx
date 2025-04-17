@@ -10,6 +10,7 @@ import { addPassword, getUserInfo, isHasPassword, updatePassword } from "@/http/
 import { useUserStore } from "@/stores/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -191,7 +192,16 @@ export default function Account({ className }: Readonly<{ className?: string }>)
         </div>
       </div>
 
-      <div className="flex-1 h-full bg-blue-500/30 rounded-lg"></div>
+      <div className="flex-1 h-full bg-blue-500/30 rounded-lg">
+        <Image
+          className="w-full h-full object-cover"
+          src="/decorate/window-3.png"
+          alt="window"
+          width={150}
+          height={150}
+          sizes="100vh"
+        />
+      </div>
     </div>
   );
 }

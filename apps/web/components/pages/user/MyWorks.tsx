@@ -83,18 +83,27 @@ const MyWorks: React.FC<MyWorksProps> = (params) => {
             key={item.workId}
             title={item.title}
             description={item.desc}
-            imgUrl="https://cimg.co/news/100430/248406/polina-kondrashova-fhrwah2hmnm-unsplash.jpg"
+            imgUrl={
+              item.coverImg ||
+              "https://cimg.co/news/100430/248406/polina-kondrashova-fhrwah2hmnm-unsplash.jpg"
+            }
             onClick={() => renderPoster(item)}
           />
         ))}
       </BaseGrid>
-      <CustomPagination
-        pageIndex={pageIndex}
-        pageSize={pageSize}
-        title={title}
-        totalPage={totalPage}
-        getList={getList}
-      />
+      {renderList.length === 0 ? (
+        <div className="flex items-center justify-center backdrop-blur-3xl hover:brightness-90 transition-all cursor-pointer group dark:bg-gradient-to-tl dark:from-gray-900/80 dark:to-gray-950/80 dark:hover:from-gray-800/80 dark:hover:to-gray-950/80 border-r-2 border-t-2 dark:border-gray-900/80 border-solid overflow-hidden relative dark:backdrop-blur-xl bg-gray-300/30 dark:bg-gray-300/10 rounded-xl h-full p-5 card">
+          暂无作品
+        </div>
+      ) : (
+        <CustomPagination
+          pageIndex={pageIndex}
+          pageSize={pageSize}
+          title={title}
+          totalPage={totalPage}
+          getList={getList}
+        />
+      )}
     </div>
   );
 };

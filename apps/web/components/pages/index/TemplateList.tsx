@@ -49,16 +49,27 @@ const TemplateList: React.FC<TemplateListProps> = () => {
             key={item.workId}
             title={item.title}
             description={item.desc}
-            imgUrl="https://cimg.co/news/100430/248406/polina-kondrashova-fhrwah2hmnm-unsplash.jpg"
+            copied_count={item.copiedCount}
+            isTemplate={true}
+            imgUrl={
+              item.coverImg ||
+              "https://cimg.co/news/100430/248406/polina-kondrashova-fhrwah2hmnm-unsplash.jpg"
+            }
             onClick={() => renderPoster(item)}
           />
         ))}
       </BaseList>
-      <div className="w-full flex items-center justify-center">
-        <Link href={"/templates"}>
-          <MoreButton className="mt-5">{t("discover-more")}</MoreButton>
-        </Link>
-      </div>
+      {templateList.length === 0 ? (
+        <div className="flex items-center justify-center backdrop-blur-3xl hover:brightness-90 transition-all cursor-pointer group dark:bg-gradient-to-tl dark:from-gray-900/80 dark:to-gray-950/80 dark:hover:from-gray-800/80 dark:hover:to-gray-950/80 border-r-2 border-t-2 dark:border-gray-900/80 border-solid overflow-hidden relative dark:backdrop-blur-xl bg-gray-300/30 dark:bg-gray-300/10 rounded-xl h-full p-5 card">
+          暂无内容
+        </div>
+      ) : (
+        <div className="w-full flex items-center justify-center">
+          <Link href={"/templates"}>
+            <MoreButton className="mt-5">{t("discover-more")}</MoreButton>
+          </Link>
+        </div>
+      )}
     </div>
   );
 };
