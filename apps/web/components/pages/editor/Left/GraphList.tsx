@@ -20,7 +20,8 @@ function GraphList() {
     const element: ElementDataType = {
       props: styleObject,
       id: id,
-      type: "graph",
+      type: "text",
+      text: event.target.innerHTML,
       isHidden: false,
       isLocked: false,
       layerName: "图层",
@@ -74,7 +75,9 @@ function GraphList() {
           onClick={(e) => handleClick(e)}
           style={item.style}
           className="mx-auto my-4"
-        ></button>
+        >
+          {item.text}
+        </button>
       ))}
     </div>
   );
