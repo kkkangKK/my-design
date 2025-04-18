@@ -5,8 +5,8 @@ import BaseLayout from "@/components/layouts/BaseLayout";
 import Banner from "@/components/shared/Banner";
 import CustomPagination from "@/components/shared/CustomPagination";
 import BaseList from "@/components/shared/ShowLists";
+import { getTemplateList } from "@/http/template";
 import { CreateWorkResponse } from "@/http/types/work";
-import { getWorkList } from "@/http/work";
 import { useWorkStore } from "@/stores/work";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -23,7 +23,7 @@ function Main() {
 
   const getList = async (pageIndex: number, pageSize: number, title?: string) => {
     try {
-      const res = await getWorkList({ pageIndex, pageSize, title, isTemplate: true });
+      const res = await getTemplateList({ pageIndex, pageSize, title });
       setWorkList(res.data.data?.list || []);
       setPageIndex(pageIndex);
       setPageSize(pageSize);

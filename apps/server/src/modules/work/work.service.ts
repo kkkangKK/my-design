@@ -184,9 +184,18 @@ export class WorkService {
                     eq(work.isTemplate, dto.isTemplate),
                   )
                 : eq(work.userId, userId)
-        : (work, { eq }) =>
-            and(eq(work.isPublic, true), eq(work.isTemplate, true)),
-      orderBy: (work, { asc }) => desc(work.copiedCount),
+        : (work, { like, eq }) =>
+            dto.title
+              ? and(
+                  eq(work.isPublic, true),
+                  like(work.title, `%${dto.title}%`),
+                  eq(work.isTemplate, true),
+                )
+              : and(eq(work.isPublic, true), eq(work.isTemplate, true)),
+      orderBy: (work) =>
+        isTemplateList
+          ? desc(work.copiedCount) // 如果是模板列表，则按照 copied_count 升序排序
+          : desc(work.createdAt), // 如果是非模板列表，则按照 createdAt 升序排序
       ...(isPaging && { limit: Number(dto.pageSize) }),
       ...(isPaging && { offset: (dto.pageIndex - 1) * dto.pageSize }),
     });

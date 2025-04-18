@@ -5,6 +5,7 @@ import BaseCard from "@/components/base/BaseCard";
 import BaseGrid from "@/components/base/BaseGrid";
 import BaseSearch from "@/components/base/BaseSearch";
 import CustomPagination from "@/components/shared/CustomPagination";
+import { getTemplateList } from "@/http/template";
 import { CreateWorkResponse } from "@/http/types/work";
 import { getWorkList } from "@/http/work";
 import { useWorkStore } from "@/stores/work";
@@ -31,7 +32,7 @@ const MyWorks: React.FC<MyWorksProps> = (params) => {
       const res =
         mode == "work"
           ? await getWorkList({ pageIndex, pageSize, title })
-          : await getWorkList({ pageIndex, pageSize, title, isTemplate: true });
+          : await getTemplateList({ pageIndex, pageSize, title });
       setRenderList(res.data.data?.list || []);
       setPageIndex(pageIndex);
       setPageSize(pageSize);

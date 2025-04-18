@@ -3,8 +3,8 @@
 import BaseCard from "@/components/base/BaseCard";
 import MoreButton from "@/components/shared/MoreButton";
 import BaseList from "@/components/shared/ShowLists";
+import { getTemplateList } from "@/http/template";
 import { CreateWorkResponse } from "@/http/types/work";
-import { getWorkList } from "@/http/work";
 import { useWorkStore } from "@/stores/work";
 import { Link } from "@/utils/i18n/routing";
 import { useTranslations } from "next-intl";
@@ -22,7 +22,7 @@ const TemplateList: React.FC<TemplateListProps> = () => {
 
   const getList = async (pageIndex?: number, pageSize?: number, title?: string) => {
     try {
-      const res = await getWorkList({ pageIndex, pageSize, title, isTemplate: true });
+      const res = await getTemplateList({ pageIndex, pageSize, title });
       setTemplateList(res.data.data?.list || []);
     } catch (error) {
       console.log("getTemplateList Error:", error);

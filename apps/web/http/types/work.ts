@@ -32,7 +32,6 @@ export type GetWorkListBody = {
   pageIndex?: number;
   pageSize?: number;
   title?: string;
-  isTemplate?: boolean;
 };
 
 export type GetWorkListResponse = {
