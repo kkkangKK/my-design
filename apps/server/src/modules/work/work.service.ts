@@ -186,10 +186,7 @@ export class WorkService {
                 : eq(work.userId, userId)
         : (work, { eq }) =>
             and(eq(work.isPublic, true), eq(work.isTemplate, true)),
-      orderBy: (work, { asc }) =>
-        isTemplateList
-          ? desc(work.copiedCount) // 如果是模板列表，则按照 copied_count 升序排序
-          : desc(work.createdAt), // 如果是非模板列表，则按照 createdAt 升序排序
+      orderBy: (work, { asc }) => desc(work.copiedCount),
       ...(isPaging && { limit: Number(dto.pageSize) }),
       ...(isPaging && { offset: (dto.pageIndex - 1) * dto.pageSize }),
     });
