@@ -20,8 +20,9 @@ const BaseSearch: React.FC<BaseSearchProps> = ({ className, onClick, onSearch, .
         <Input
           type="text"
           onChange={(e) => setInputValue(e.target.value)}
-          placeholder="Email"
+          placeholder="Search"
           onClick={onClick}
+          value={inputValue}
         />
         <Button
           type="submit"
