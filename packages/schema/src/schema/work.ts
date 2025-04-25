@@ -23,11 +23,6 @@ type Content = {
   pageBackgroundStyle?: any;
 };
 
-// type Content = {
-//   components?: Array<any>;
-//   props?: any;
-// };
-
 export const work = mysqlTable("work", {
   id: int("id").primaryKey().autoincrement(),
   uuid: varchar("uuid", { length: 128 })
@@ -45,6 +40,7 @@ export const work = mysqlTable("work", {
   status: int("status").default(0),
   userId: varchar("user_id", { length: 128 }).references(() => user.id),
   channels: json("channels").$type<Array<ChannelProps>>().notNull().default([]),
+  tag_ids: json("tag_ids").$type<Array<string>>().notNull().default([]),
   latestPublishAt: timestamp("latest_publishAt"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").onUpdateNow(),
