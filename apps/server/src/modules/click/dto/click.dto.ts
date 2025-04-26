@@ -17,9 +17,17 @@ export class ClickDto {
   @IsString({ message: '标签id必须是字符串类型' })
   @IsNotEmpty({ message: '标签ID不能为空' })
   tagId: string;
+
+  @ApiProperty({
+    example: 13,
+    description: '标签名称不能为空',
+  })
+  @IsString({ message: '标签名称必须是字符串类型' })
+  @IsNotEmpty({ message: '标签名称不能为空' })
+  tagName: string;
 }
 
-export class ClickBtTagsDto extends OmitType(ClickDto, ['tagId']) {
+export class ClickBtTagsDto extends OmitType(ClickDto, ['tagId', 'tagName']) {
   @ApiProperty({
     example: ['青春', '校园'],
     description: '标签不能为空',

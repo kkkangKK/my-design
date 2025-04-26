@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { DB, DbType } from '../global/providers/db.provider';
 import { CreateTagDto, UpdateTagDto } from './dto/tag.dto';
 
@@ -11,9 +11,17 @@ export class TagService {
   constructor(@Inject(DB) private db: DbType) {}
 
   async addTag(dto: CreateTagDto) {
-    await this.db.insert(tag).values({
+    const [res] = await this.db
+      .insert(tag)
+      .values({
+        ...dto,
+      })
+      .$returningId();
+
+    return {
+      id: res.id,
       ...dto,
-    });
+    };
   }
 
   async updateTag(dto: UpdateTagDto, tagId: string) {

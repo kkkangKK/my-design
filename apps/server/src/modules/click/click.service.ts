@@ -42,7 +42,7 @@ export class ClickService {
     for (const tagName of dto.tags) {
       const tagId = (await this.tagService.getTagByName(tagName)).id;
       if (!tagId) continue;
-      await this.addClickCount({ ...dto, tagId });
+      await this.addClickCount({ ...dto, tagId, tagName });
     }
   }
 

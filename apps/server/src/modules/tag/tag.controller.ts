@@ -37,10 +37,11 @@ export class TagController {
   @ApiBody({ type: CreateTagDto })
   async addTag(@Body() dto: CreateTagDto) {
     try {
-      await this.tagService.addTag({ ...dto });
+      const data = await this.tagService.addTag({ ...dto });
       return {
         code: 200,
         msg: '执行成功',
+        data,
       };
     } catch (error) {
       return {

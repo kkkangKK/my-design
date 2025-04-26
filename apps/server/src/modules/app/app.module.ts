@@ -18,6 +18,7 @@ import { PageModule } from '../page/page.module';
 import { AiModule } from '../ai/ai.module';
 import { TagModule } from '../tag/tag.module';
 import { ClickModule } from '../click/click.module';
+import { RecommendationModule } from '../recommendation/recommendation.module';
 import { TemplateModule } from '../template/template.module';
 import { GlobalConfig } from 'src/config';
 
@@ -41,6 +42,7 @@ import { GlobalConfig } from 'src/config';
     AiModule,
     TagModule,
     ClickModule,
+    RecommendationModule,
     PassportModule.register({ secret: GlobalConfig.jwt_secret }),
     JwtModule.register({
       global: true,
