@@ -16,6 +16,8 @@ import { WorkModule } from '../work/work.module';
 import { ChannelModule } from '../channel/channel.module';
 import { PageModule } from '../page/page.module';
 import { AiModule } from '../ai/ai.module';
+import { TagModule } from '../tag/tag.module';
+import { ClickModule } from '../click/click.module';
 import { TemplateModule } from '../template/template.module';
 import { GlobalConfig } from 'src/config';
 
@@ -37,6 +39,8 @@ import { GlobalConfig } from 'src/config';
     ChannelModule,
     PageModule,
     AiModule,
+    TagModule,
+    ClickModule,
     PassportModule.register({ secret: GlobalConfig.jwt_secret }),
     JwtModule.register({
       global: true,

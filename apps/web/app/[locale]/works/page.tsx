@@ -57,6 +57,7 @@ function Main() {
           <BaseCard
             key={item.workId}
             title={item.title}
+            tags={item.tags}
             description={item.desc}
             imgUrl={
               item.coverImg ||

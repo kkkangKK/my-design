@@ -8,10 +8,14 @@ import { and, desc, eq } from 'drizzle-orm';
 import { JwtPayloadDto } from '../auth/dto/jwt.dto';
 import { ResponseData } from 'src/interceptor/responseData';
 import { GlobalConfig } from 'src/config';
+import { TagService } from '../tag/tag.service';
 
 @Injectable()
 export class WorkService {
-  constructor(@Inject(DB) private db: DbType) {}
+  constructor(
+    @Inject(DB) private db: DbType,
+    private tagService: TagService,
+  ) {}
 
   async createEmptyWork(dto: WorkDto) {
     try {
@@ -19,6 +23,17 @@ export class WorkService {
       const newWork = await this.db.query.work.findFirst({
         where: eq(work.id, Number(res[0].insertId)),
       });
+
+      if (dto.tags) {
+        dto.tags.forEach(async (tagName) => {
+          const tag = await this.tagService.getTagByName(tagName);
+          if (!tag) {
+            await this.tagService.addTag({
+              name: tagName,
+            });
+          }
+        });
+      }
 
       return ResponseData.ok(
         {
@@ -113,6 +128,16 @@ export class WorkService {
 
   async updateWork(workId: string, dto: WorkDto) {
     await this.db.update(work).set(dto).where(eq(work.uuid, workId));
+    if (dto.tags) {
+      dto.tags.forEach(async (tagName) => {
+        const tag = await this.tagService.getTagByName(tagName);
+        if (!tag) {
+          await this.tagService.addTag({
+            name: tagName,
+          });
+        }
+      });
+    }
     return {
       workId: workId,
       ...dto,

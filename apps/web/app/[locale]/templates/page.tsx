@@ -54,6 +54,7 @@ function Main() {
           <BaseCard
             key={item.workId}
             title={item.title}
+            tags={item.tags}
             description={item.desc}
             copied_count={item.copiedCount}
             isTemplate={true}

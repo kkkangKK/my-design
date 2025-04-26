@@ -1,6 +1,7 @@
 "use client";
 
 import CustomFormField from "@/components/shared/CustomFormField";
+import { TagSelector } from "@/components/shared/TagSelector";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -37,6 +38,7 @@ function DialogDemo({
       .max(30, { message: "标题不能超过30个字符" }),
     desc: z.string(),
     coverImg: z.string(),
+    tags: z.array(z.string()).min(1, { message: "至少选择一个标签" }),
   });
 
   type FormSchemaType = z.infer<typeof FormSchema>;
@@ -47,6 +49,7 @@ function DialogDemo({
       title: "",
       desc: "",
       coverImg: "",
+      tags: [],
     },
   });
 
@@ -65,6 +68,7 @@ function DialogDemo({
         Elements,
         pageBackgroundStyle,
       },
+      tags: values.tags,
       isTemplate: isTemplate,
       isPublic: isTemplate,
       status: 1,
@@ -105,6 +109,7 @@ function DialogDemo({
       const res = await getWork(currentWorkId);
       form.setValue("title", res.data.data.title);
       form.setValue("desc", res.data.data.desc);
+      form.setValue("tags", res.data.data.tags);
       setIsTemplate(res.data.data.isTemplate);
     }
   };
@@ -156,10 +161,17 @@ function DialogDemo({
                   placeholder={"请输入作品简介"}
                   label={"作品简介"}
                 />
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-medium">作品标签</label>
+                  <TagSelector
+                    value={form.watch("tags") || []}
+                    onChange={(tags) => form.setValue("tags", tags)}
+                  />
+                </div>
               </div>
               <div className="flex justify-end mt-[5px]">
                 <Button
-                  className="bg-[#3d7fff] text-white"
+                  className="bg-red-400 text-white hover:bg-red-500"
                   type="submit"
                 >
                   确认

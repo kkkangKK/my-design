@@ -10,6 +10,7 @@ export type GetTemplateResponse = {
   copiedCount: number;
   status: number;
   userId: string;
+  tags: string[];
   workId: string;
 };
 

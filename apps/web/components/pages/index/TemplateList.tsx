@@ -50,6 +50,7 @@ const TemplateList: React.FC<TemplateListProps> = () => {
             title={item.title}
             description={item.desc}
             copied_count={item.copiedCount}
+            tags={item.tags}
             isTemplate={true}
             imgUrl={
               item.coverImg ||

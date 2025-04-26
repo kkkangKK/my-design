@@ -73,6 +73,12 @@ export class WorkDto {
     description: '用户ID',
   })
   userId?: string;
+
+  @ApiProperty({
+    type: Array,
+    description: '标签',
+  })
+  tags: string[];
 }
 
 export class UpdateWorkDto extends OmitType(WorkDto, [

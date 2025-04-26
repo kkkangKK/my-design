@@ -92,7 +92,7 @@ function CustomFormField({
         <FormItem>
           {isShowLabel ? (
             <FormLabel>
-              <span className={`${hidden ? "hidden" : ""} font-serif text-black dark:text-white`}>
+              <span className={`${hidden ? "hidden" : ""} text-sm font-medium  dark:text-white`}>
                 {label}
               </span>
             </FormLabel>

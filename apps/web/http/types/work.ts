@@ -8,6 +8,7 @@ export type CreateWorkBody = {
     Elements?: Array<ElementDataType>;
     pageBackgroundStyle?: object;
   };
+  tags: string[];
   isTemplate: boolean;
   isPublic: boolean;
   status: number;
@@ -18,6 +19,7 @@ export type CreateWorkResponse = {
   desc: string;
   coverImg: string;
   content: object;
+  tags: string[];
   isTemplate: boolean;
   isPublic: boolean;
   isHot: boolean;
@@ -49,6 +51,7 @@ export type CopyWorkResponse = {
   isTemplate: boolean;
   isPublic: boolean;
   isHot: boolean;
+  tags: string[];
   author: string;
   copiedCount: number;
   status: number;
@@ -72,6 +75,7 @@ export type UpdateWorkResponse = {
     Elements?: Array<ElementDataType>;
     pageBackgroundStyle?: object;
   };
+  tags: string[];
   isTemplate: boolean;
   isPublic: boolean;
   status: number;
