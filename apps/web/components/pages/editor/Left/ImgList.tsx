@@ -1,3 +1,4 @@
+import BaseButton from "@/components/base/BaseButton";
 import { uploadFile } from "@/http/oss";
 import { UseElementStore } from "@/stores/element";
 import { useSocketStore } from "@/stores/socket";
@@ -110,7 +111,7 @@ function ImgList() {
         backgroundImage: `url('${response.data.data.url}?t=${Date.now()}')`,
         backgroundSize: "100% 100%",
       };
-      setImgList((prev) => [...prev, { style: style }]);
+      setImgList((prev) => [...prev, { style: style, mode }]);
     } catch (error) {
       console.error("Error uploading file:", error);
     } finally {
@@ -118,17 +119,58 @@ function ImgList() {
     }
   };
 
+  const [mode, setMode] = useState<"youth" | "daily" | "wedding" | "recruitment" | "other">(
+    "youth",
+  );
+  const switchMode = async (mode: "youth" | "daily" | "wedding" | "recruitment" | "other") => {
+    setMode(mode);
+  };
+
   return (
     <div>
+      <div className="flex justify-center gap-2 mt-3">
+        <BaseButton
+          isStatic={mode == "youth" ? true : false}
+          onClick={() => switchMode("youth")}
+        >
+          青春
+        </BaseButton>
+        <BaseButton
+          isStatic={mode == "daily" ? true : false}
+          onClick={() => switchMode("daily")}
+        >
+          日常
+        </BaseButton>
+        <BaseButton
+          isStatic={mode == "wedding" ? true : false}
+          onClick={() => switchMode("wedding")}
+        >
+          婚礼
+        </BaseButton>
+        <BaseButton
+          isStatic={mode == "recruitment" ? true : false}
+          onClick={() => switchMode("recruitment")}
+        >
+          招聘
+        </BaseButton>
+        <BaseButton
+          isStatic={mode == "other" ? true : false}
+          onClick={() => switchMode("other")}
+        >
+          其他
+        </BaseButton>
+      </div>
       <div className="grid grid-cols-2 mt-4">
-        {imgList.map((item: any) => (
-          <button
-            key={item.style.backgroundImage}
-            onClick={(e) => handleClick(e)}
-            style={item.style}
-            className="mx-auto my-2"
-          ></button>
-        ))}
+        {imgList
+          .filter((item: any) => item.mode === mode)
+          .map((item: any) => (
+            <button
+              key={item.style.backgroundImage}
+              onClick={(e) => handleClick(e)}
+              style={item.style}
+              className="mx-auto my-2"
+            ></button>
+          ))}
       </div>
       {loading ? (
         <div className="mx-auto mt-2 flex justify-center items-center">
