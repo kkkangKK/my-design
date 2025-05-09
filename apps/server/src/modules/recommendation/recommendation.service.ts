@@ -68,7 +68,8 @@ export class RecommendationService {
     // 3. 按相似度排序，取Top 5相似用户
     const topSimilarUsers = usersSimilarity
       .sort((a, b) => b.similarity - a.similarity)
-      .slice(0, 5);
+      // .slice(0, 5);
+      .slice(0, 1);
 
     // 4. 收集相似用户点击的标签
     const similarUserTagNames = await this.db

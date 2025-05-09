@@ -132,7 +132,7 @@ export default function Account({ className }: Readonly<{ className?: string }>)
 
         setPhoneIsDisabled(false);
         phoneForm.reset();
-        // phoneForm.setValue("otp", "000000"); //初始化验证码
+        phoneForm.setValue("otp", "000000"); //初始化验证码
         break;
       }
       case 3:
@@ -286,6 +286,7 @@ export default function Account({ className }: Readonly<{ className?: string }>)
                   isShowLabel={false}
                   isVerify={true}
                   hidden={phoneStep === 0 || phoneStep === 2}
+                  sec={1}
                 />
 
                 <div className="w-full flex gap-4">

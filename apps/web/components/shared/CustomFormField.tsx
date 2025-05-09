@@ -27,6 +27,7 @@ function CustomFormField({
   countdownZero,
   isEmail,
   isPassword,
+  sec,
 }: Readonly<{
   form: FormType;
   name: string;
@@ -40,6 +41,7 @@ function CustomFormField({
   countdownZero?: boolean;
   isEmail?: boolean;
   isPassword?: boolean;
+  sec?: number;
 }>) {
   //按钮禁用
   const [isDisabled, setIsDisabled] = useState(false);
@@ -60,7 +62,7 @@ function CustomFormField({
         description: "请在1分钟内完成验证",
       });
       setIsDisabled(true);
-      setCountdown(30);
+      setCountdown(sec || 30);
     }
   };
   useEffect(() => {
