@@ -10,11 +10,16 @@ import { UserService } from '../user/user.service';
 import { CacheService } from '../cache/cache.service';
 import { Cron } from '@nestjs/schedule';
 
+type ChatType = {
+  text: string;
+  username: string;
+};
 interface RoomState {
   elements: any[];
   collaborators: string[];
   lastActive: number;
   pageBackgroundStyle: any;
+  chat?: ChatType[];
 }
 
 const ROOM_TTL = 12 * 60 * 60; // 12小时（秒）
@@ -140,6 +145,7 @@ export class EventGateway {
         lastActive: Date.now(),
         elements,
         pageBackgroundStyle,
+        chat: [],
       };
     }
 
@@ -161,6 +167,10 @@ export class EventGateway {
     client.emit('successInRoom', roomId);
     const user = await this.userService.findUserByUserId(userId);
     client.to(roomId).emit('collaboratorJoined', user.username);
+
+    client.emit('roomChat', {
+      chatMessage: room.chat,
+    });
   }
 
   @SubscribeMessage('deltaUpdate')
@@ -205,7 +215,7 @@ export class EventGateway {
     // }
 
     // console.log('deltaUpdate--Elements', elements);
-    console.log('deltaUpdate--delta', delta);
+    // console.log('deltaUpdate--delta', delta);
 
     // room.version++;
     room.lastActive = Date.now();
@@ -216,6 +226,44 @@ export class EventGateway {
     client.broadcast.to(roomId).emit('remoteUpdate', {
       delta,
       type,
+    });
+  }
+
+  @SubscribeMessage('chatUpdate')
+  async handleChatUpdate(
+    @MessageBody()
+    {
+      chatMessage,
+    }: {
+      chatMessage: ChatType[];
+    },
+    @ConnectedSocket() client: Socket,
+  ) {
+    // 获取客户端所在的第一个非自身房间（假设用户只在一个协作房间中）
+    const rooms = Array.from(client.rooms).filter((room) => room !== client.id);
+
+    if (rooms.length === 0) {
+      client.emit('error', '未加入任何房间');
+      return;
+    }
+
+    const roomId = rooms[0]; // 取第一个房间ID
+
+    const room = await this.getRoomState(roomId);
+    if (!room) {
+      client.emit('error', '房间不存在');
+      console.log('房间不存在');
+      return;
+    }
+
+    room.chat = chatMessage;
+
+    await this.saveRoomState(roomId, room);
+    client.emit('roomChat', {
+      chatMessage: chatMessage,
+    });
+    client.to(roomId).emit('roomChat', {
+      chatMessage: chatMessage,
     });
   }
 

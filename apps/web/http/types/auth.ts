@@ -7,7 +7,7 @@ export type DefaultSignInBody = {
 
 export type DefaultSignInResponse = {
   userId: string;
-  userName: string;
+  username: string;
   phone: string;
   role: string;
   email: string | null;

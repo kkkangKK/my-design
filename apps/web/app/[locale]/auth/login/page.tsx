@@ -22,7 +22,7 @@ import { z } from "zod";
 export default function Login() {
   const router = useRouter();
   const [_, setTokenHandler] = useToken();
-  const { setUserId } = useUserStore();
+  const { setUserId, setUserName } = useUserStore();
   const { toast } = useToast();
   const t = useTranslations();
   const loginFormSchema = z.object({
@@ -89,6 +89,7 @@ export default function Login() {
           setTokenHandler(res.data.token);
         }
         setUserId(res.data.data?.userId);
+        setUserName(res.data.data?.username);
         router.push("/");
       } else {
         toast({

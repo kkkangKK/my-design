@@ -12,9 +12,10 @@ import { getWork } from "@/http/work";
 import { UseElementStore } from "@/stores/element";
 import { useSocketStore } from "@/stores/socket";
 import { useWorkStore } from "@/stores/work";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 
+import ChatBubble from "./ChatBubble";
 import SnowBackground from "./SnowBackground";
 
 function Middle(props: any) {
@@ -223,43 +224,46 @@ function Middle(props: any) {
           </BaseTooltips>
         </div>
       )}
+      <div className="w-full flex justify-start gap-7 items-center flex-row">
+        <ChatBubble />
+        <div
+          id="mid-container"
+          // className={`bg-white mt-5 ${ratio > 1 ? "scale-[0.8]" : ""}`}
+          className={`bg-white mt-5`}
+          style={{
+            ...pageBackgroundStyle,
+            width: "375px",
+            height: "667px",
+            position: "relative",
+            overflow: "auto",
+          }}
+        >
+          {/* 当为模板展示时用于遮挡移动缩放组件时的透明盒子 */}
+          {!isAuthor && (
+            <div className="w-[375px] h-[667px] opacity-0 absolute z-50 top-0 left-0"></div>
+          )}
 
-      <div
-        id="mid-container"
-        // className={`bg-white mt-5 ${ratio > 1 ? "scale-[0.8]" : ""}`}
-        className={`bg-white mt-5`}
-        style={{
-          ...pageBackgroundStyle,
-          width: "375px",
-          height: "667px",
-          position: "relative",
-          overflow: "auto",
-        }}
-      >
-        {/* 当为模板展示时用于遮挡移动缩放组件时的透明盒子 */}
-        {!isAuthor && (
-          <div className="w-[375px] h-[667px] opacity-0 absolute z-50 top-0 left-0"></div>
-        )}
+          <ContextMenu item={actionItem} />
 
-        <ContextMenu item={actionItem} />
-
-        {Elements.map((item: any) =>
-          item.id == currentElement ? (
-            <div
-              key={item.id}
-              className={` ${item.isHidden ? "invisible" : ""}`}
-            >
-              <ResizeComponent item={item} />
-            </div>
-          ) : (
-            <div
-              key={item.id + "-"}
-              className={` ${item.isHidden ? "invisible" : ""}`}
-            >
-              <ChangePosition item={item} />
-            </div>
-          ),
-        )}
+          {Elements.map((item: any) =>
+            item.id == currentElement ? (
+              <div
+                key={item.id}
+                className={` ${item.isHidden ? "invisible" : ""}`}
+              >
+                <ResizeComponent item={item} />
+              </div>
+            ) : (
+              <div
+                key={item.id + "-"}
+                className={` ${item.isHidden ? "invisible" : ""}`}
+              >
+                <ChangePosition item={item} />
+              </div>
+            ),
+          )}
+        </div>
+        <div className="bg-yellow-200 w-[370px] h-[500px]"></div>
       </div>
     </SnowBackground>
   );
