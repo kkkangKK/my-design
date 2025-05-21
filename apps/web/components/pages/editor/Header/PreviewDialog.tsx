@@ -15,8 +15,8 @@ function DialogDemo({
   const { currentWorkId, workName } = useWorkStore();
 
   // 拼接完整 URL（后期改为域名）
-  // const fullUrl = `https://192.168.31.176:3001/page/${currentWorkId || ""}`;
-  const fullUrl = `http://127.0.0.1:3001/page/${currentWorkId || ""}`;
+  const fullUrl = `http://192.168.176.23:3001/page/${currentWorkId || ""}`;
+  // const fullUrl = `http://127.0.0.1:3001/page/${currentWorkId || ""}`;
 
   const [imgUrl, setImgUrl] = useState("");
   const getTheImg = async () => {

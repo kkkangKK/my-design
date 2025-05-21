@@ -38,8 +38,11 @@ export default function ChatBubble({ messages = [] }: ChatBubbleProps) {
   }, [socket]);
 
   return (
-    <div className="h-[500px]">
-      <div className="p-4 rounded-lg w-[375px] h-[450px] overflow-y-auto hide-scrollbar">
+    <div className="h-[450px] bg-white bg-opacity-45">
+      <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+        <h3 className="font-semibold">聊天框</h3>
+      </div>
+      <div className="p-4 rounded-lg w-[325px] h-[320px] overflow-y-auto hide-scrollbar">
         {useChatStore.getState().chatMessage.map((message, index) => {
           const isMe = message.username === userName;
           return (
@@ -57,7 +60,9 @@ export default function ChatBubble({ messages = [] }: ChatBubbleProps) {
           );
         })}
       </div>
-      <ChatInput />
+      <div className="p-4 border-t border-gray-200 flex justify-center space-x-4">
+        <ChatInput />
+      </div>
     </div>
   );
 }

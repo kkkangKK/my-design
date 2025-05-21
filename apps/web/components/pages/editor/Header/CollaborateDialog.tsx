@@ -40,7 +40,7 @@ export function RoomDialog({ children }: { children: React.ReactNode }) {
   const [mode, setMode] = useState<"create" | "join">();
   const [isInRoom, setIsInRoom] = useState(false);
   const [roomCode, setRoomCode] = useState("");
-  const { socket, connect, disconnect } = useSocketStore();
+  const { socket, connect, disconnect, setIsOpenShare } = useSocketStore();
   const { userId } = useUserStore();
   const { setPageBackgroundStyle, setElements, setCurrentElement } = UseElementStore();
 
@@ -110,6 +110,7 @@ export function RoomDialog({ children }: { children: React.ReactNode }) {
         });
       }
       setOpen(false);
+      setIsOpenShare(true);
     } else {
       toast({
         variant: "destructive",
@@ -131,6 +132,7 @@ export function RoomDialog({ children }: { children: React.ReactNode }) {
     setIsInRoom(false);
     setRoomCode("");
     setOpen(false);
+    setIsOpenShare(false);
   };
 
   // 自动生成合规房间代码

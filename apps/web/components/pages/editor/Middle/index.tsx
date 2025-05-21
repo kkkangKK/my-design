@@ -17,6 +17,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import ChatBubble from "./ChatBubble";
 import SnowBackground from "./SnowBackground";
+import VoiceChatRoom from "./VoiceChatRoom";
 
 function Middle(props: any) {
   const {
@@ -36,7 +37,7 @@ function Middle(props: any) {
     ifUndo,
   } = UseElementStore();
   const { currentWorkId, setWorkName } = useWorkStore();
-  const { socket } = useSocketStore();
+  const { socket, isOpenShare } = useSocketStore();
 
   useHotKey();
   const ratio = useGetScreenRatio();
@@ -224,8 +225,8 @@ function Middle(props: any) {
           </BaseTooltips>
         </div>
       )}
-      <div className="w-full flex justify-start gap-7 items-center flex-row">
-        <ChatBubble />
+      <div className="w-full flex justify-around items-center flex-row">
+        {isOpenShare ? <ChatBubble /> : null}
         <div
           id="mid-container"
           // className={`bg-white mt-5 ${ratio > 1 ? "scale-[0.8]" : ""}`}
@@ -263,7 +264,7 @@ function Middle(props: any) {
             ),
           )}
         </div>
-        <div className="bg-yellow-200 w-[370px] h-[500px]"></div>
+        {isOpenShare ? <VoiceChatRoom /> : null}
       </div>
     </SnowBackground>
   );

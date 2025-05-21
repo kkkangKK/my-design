@@ -6,6 +6,8 @@ interface SocketState {
   socket: Socket | null;
   connect: (url?: string) => Socket;
   disconnect: () => void;
+  isOpenShare: boolean;
+  setIsOpenShare: (is: boolean) => void;
 }
 
 export const useSocketStore = create<SocketState>((set) => ({
@@ -28,4 +30,6 @@ export const useSocketStore = create<SocketState>((set) => ({
       return { socket: null };
     });
   },
+  isOpenShare: false,
+  setIsOpenShare: (is: boolean) => set((state) => ({ isOpenShare: is })),
 }));

@@ -21,7 +21,7 @@ export default function ChatInput() {
   };
 
   return (
-    <div className="mt-4 flex gap-2">
+    <div className=" flex gap-2">
       <input
         type="text"
         value={message}

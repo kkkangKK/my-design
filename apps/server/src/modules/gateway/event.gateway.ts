@@ -252,7 +252,6 @@ export class EventGateway {
     const room = await this.getRoomState(roomId);
     if (!room) {
       client.emit('error', '房间不存在');
-      console.log('房间不存在');
       return;
     }
 
@@ -281,9 +280,128 @@ export class EventGateway {
       room.collaborators = room.collaborators.filter((id) => id !== userId);
       room.lastActive = Date.now();
       await this.saveRoomState(roomId, room);
-
       const user = await this.userService.findUserByUserId(userId);
       client.to(roomId).emit('collaboratorLeft', user.username);
     }
+  }
+
+  // 语音通话相关事件
+  private readonly MAX_VOICE_PARTICIPANTS = 10;
+
+  @SubscribeMessage('voiceJoinRoom')
+  async handleVoiceJoinRoom(
+    @MessageBody() { userId }: { userId: string },
+    @ConnectedSocket() client: Socket,
+  ) {
+    const rooms = Array.from(client.rooms).filter((room) => room !== client.id);
+    if (rooms.length === 0) {
+      client.emit('voiceError', '请先加入协作房间');
+      return;
+    }
+
+    const roomId = rooms[0];
+    const room = await this.getRoomState(roomId);
+    if (!room) {
+      client.emit('voiceError', '房间不存在');
+      return;
+    }
+
+    // 检查房间人数
+    const currentParticipants = room.collaborators.length;
+    if (currentParticipants >= this.MAX_VOICE_PARTICIPANTS) {
+      client.emit('voiceError', '房间人数已达上限');
+      return;
+    }
+
+    const collaborators = await Promise.all(
+      room.collaborators.map(async (id) => {
+        const user = await this.userService.findUserByUserId(id);
+        return { userId: id, userName: user.username };
+      }),
+    );
+
+    // 通知房间内其他用户有新用户加入
+    client
+      .to(roomId)
+      .emit('voiceUserJoined', { userId, participants: collaborators });
+    client.emit('voiceJoinedSuccess', {
+      participants: collaborators,
+      roomId,
+    });
+  }
+
+  @SubscribeMessage('voiceLeaveRoom')
+  async handleVoiceLeaveRoom(
+    @MessageBody() { userId }: { userId: string },
+    @ConnectedSocket() client: Socket,
+  ) {
+    const rooms = Array.from(client.rooms).filter((room) => room !== client.id);
+    if (rooms.length === 0) return;
+
+    const roomId = rooms[0];
+    client.to(roomId).emit('voiceUserLeft', userId);
+  }
+
+  @SubscribeMessage('voiceOffer')
+  async handleVoiceOffer(
+    @MessageBody()
+    data: {
+      offer: RTCSessionDescriptionInit;
+      targetUserId: string;
+      userId: string;
+    },
+    @ConnectedSocket() client: Socket,
+  ) {
+    const rooms = Array.from(client.rooms).filter((room) => room !== client.id);
+    if (rooms.length === 0) return;
+
+    const roomId = rooms[0];
+
+    client.to(roomId).emit('voiceOffer', {
+      offer: data.offer,
+      userId: data.userId,
+    });
+  }
+
+  @SubscribeMessage('voiceAnswer')
+  async handleVoiceAnswer(
+    @MessageBody()
+    data: {
+      answer: RTCSessionDescriptionInit;
+      targetUserId: string;
+      userId: string;
+    },
+    @ConnectedSocket() client: Socket,
+  ) {
+    const rooms = Array.from(client.rooms).filter((room) => room !== client.id);
+    if (rooms.length === 0) return;
+
+    const roomId = rooms[0];
+
+    client.to(roomId).emit('voiceAnswer', {
+      answer: data.answer,
+      userId: data.userId,
+    });
+  }
+
+  @SubscribeMessage('voiceIceCandidate')
+  async handleVoiceIceCandidate(
+    @MessageBody()
+    data: {
+      candidate: RTCIceCandidateInit;
+      targetUserId: string;
+      userId: string;
+    },
+    @ConnectedSocket() client: Socket,
+  ) {
+    const rooms = Array.from(client.rooms).filter((room) => room !== client.id);
+    if (rooms.length === 0) return;
+
+    const roomId = rooms[0];
+
+    client.to(roomId).emit('voiceIceCandidate', {
+      candidate: data.candidate,
+      userId: data.userId,
+    });
   }
 }
