@@ -29,7 +29,7 @@ function DialogDemo({
           toast({
             variant: "success",
             title: "Success",
-            description: "作品发布成功",
+            description: "等待管理员审核...",
           });
         }
       } else {

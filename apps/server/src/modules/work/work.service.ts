@@ -150,7 +150,7 @@ export class WorkService {
       .update(work)
       .set({
         status: 2,
-        isPublic: true,
+        // isPublic: true,
         latestPublishAt: new Date(),
         ...(isTemplate && { isTemplate: true }),
       })

@@ -70,7 +70,7 @@ function DialogDemo({
       },
       tags: values.tags,
       isTemplate: isTemplate,
-      isPublic: isTemplate,
+      isPublic: false,
       status: 1,
     };
     console.log(params);
