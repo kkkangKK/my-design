@@ -32,7 +32,7 @@ const MyWorks: React.FC<MyWorksProps> = (params) => {
       const res =
         mode == "work"
           ? await getWorkList({ pageIndex, pageSize, title })
-          : await getTemplateList({ pageIndex, pageSize, title });
+          : await getWorkList({ pageIndex, pageSize, title, isTemplate: true });
       setRenderList(res.data.data?.list || []);
       setPageIndex(pageIndex);
       setPageSize(pageSize);

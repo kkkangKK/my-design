@@ -184,13 +184,13 @@ export function RoomDialog({ children }: { children: React.ReactNode }) {
               <div className="flex flex-col gap-4 py-4">
                 <Button
                   onClick={() => setMode("create")}
-                  className="h-12 text-lg"
+                  className="h-12 text-lg bg-red-400 hover:bg-red-500"
                 >
                   创建新房间
                 </Button>
                 <Button
                   onClick={() => setMode("join")}
-                  className="h-12 text-lg"
+                  className="h-12 text-lg hover:bg-red-500"
                   variant="outline"
                 >
                   加入已有房间
@@ -235,6 +235,7 @@ export function RoomDialog({ children }: { children: React.ReactNode }) {
                     <Button
                       type="button"
                       variant="ghost"
+                      className="hover:bg-red-500"
                       onClick={() => {
                         setMode(undefined);
                         form.reset();
@@ -242,7 +243,12 @@ export function RoomDialog({ children }: { children: React.ReactNode }) {
                     >
                       返回
                     </Button>
-                    <Button type="submit">{mode === "create" ? "创建" : "加入"}</Button>
+                    <Button
+                      type="submit"
+                      className="bg-red-400 hover:bg-red-500"
+                    >
+                      {mode === "create" ? "创建" : "加入"}
+                    </Button>
                   </div>
                 </form>
               </Form>

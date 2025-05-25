@@ -140,7 +140,7 @@ export default function Login() {
                   {t("registerLink")}
                 </Link>
               </label>
-              <Oauth2 />
+              {/* <Oauth2 /> */}
             </div>
           </form>
         </Form>
